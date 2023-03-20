@@ -1,6 +1,6 @@
 /*=================================================
 
-PART 4: Player management
+PART 4: Calculating player physics
 
 This is the most important file in our game from
 the player's perspective. Here we will calculate 
@@ -41,7 +41,7 @@ this is enough to start our game.
 
 =================================================*/
     
-  }, /* close actionInput */ 
+  }, /* close player.actionInput object */ 
 
 /*=================================================
 
@@ -96,9 +96,9 @@ h for height, a for angle, and so on...
     turn: 0.02,  /* turning force */ 
     momento: 0.8, /* rotation reduction */
 
-  } /* close ship */
+  } /* close player.ship object */
 
-}; /*close player */
+}; /* close player global var */
 
 /*================================================
 
@@ -157,7 +157,7 @@ to increase the ship top speed.
       var maxSpeed = s.max + (player.speed * 0.001);
     
       if ( s.v > maxSpeed ) s.v = maxSpeed;
-
+  
 /*================================================
 
 If the player is not pressing up or his speed is
@@ -172,12 +172,10 @@ consideration our control bonus value.
 
 =================================================*/
 
-    } else {
-      
-      s.v *= s.brake - (player.control * 0.0005);
-
-    } /* close else */
-
+    } /* close if player.actionInput.up condition */
+    
+    else s.v *= s.brake - (player.control * 0.0005);
+    
 /*================================================
 
 To calculate our new composite velocities we need some
@@ -209,7 +207,7 @@ ships inside our boundaries.
     
     world.limit(s);
 
-  }, /* close move function */
+  }, /* close playerPhysics.move function */
 
 /*================================================
 
@@ -274,7 +272,7 @@ the ship current angle to make it rotate.
 
     s.a += s.va;
 
-  }, /* close turn function */
+  }, /* close playerPhysics.turn function */
 
 /*================================================
 
@@ -386,7 +384,6 @@ speed with our speedBonus.
 
 =================================================*/
 
-        
         vx: ((offset.x * 0.14) + s.vx) * speedBonus,
         vy: ((offset.y * 0.14) + s.vy) * speedBonus,
 
@@ -406,7 +403,7 @@ will also take into account the attack bonus.
 
         life: 75 - (player.attack * 0.5)
 
-      }; /* close bullet */
+      }; /* close bullet object */
 
 /*================================================
 
@@ -419,7 +416,7 @@ to the player bullet list.
       
     } /* close if can shoot condition */
     
-  },/* close shoot function */
+  }, /* close playerPhysics.shoot function */
   
 /*================================================
 
@@ -467,9 +464,9 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
     }); /* close player.bullets loop */
 
-  } /* close bullets function */
+  } /* close playerPhysics.bullets function */
   
-}; /* close playerPhysics */
+}; /* close playerPhysics global var */
 
 /*================================================
 
@@ -477,6 +474,8 @@ That was a lot, right! Well it was all of our game
 physics and player management in one file. 
 Take a break, drink some water and eat a cake,
 you deserve it!
+
+After you are done head to "P05-user-interface.js"
 
 =================================================*/
 

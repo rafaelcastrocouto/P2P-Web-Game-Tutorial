@@ -1,6 +1,6 @@
 /*================================================
 
-PART 5: User interface
+PART 5: User interface sliders and buttons
 
 To make our user interface work we will create 
 three methods. Two of them will let the user
@@ -40,6 +40,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
       shipMenu: document.querySelector('.shipMenu'),
       mobileMenu: document.querySelector('.mobileMenu')
     }
+    
 /*================================================
 
 We also need to select all sliders and buttons.
@@ -152,7 +153,7 @@ buttons. They will also work for touch devices.
      
     }); /* close ui.mobileControls loop */
 
-  }, /* close start function */
+  }, /* close ui.start function */
    
 /*================================================
 
@@ -176,8 +177,6 @@ share it with our peers.
 =================================================*/
   
     player.actionInput.editing = state;
-   // network.broadcast({ player });
-
 
 /*================================================
 
@@ -196,10 +195,9 @@ in our list we build and broadcast them.
         asteroids.list = asteroids.build();
       }
       
-    }
-
+    } /* close if no asteroids condition */
     
-  }, /* close toggle function */
+  }, /* close ui.toggle function */
 
 /*================================================
 
@@ -267,7 +265,7 @@ slider with the new bonus value.
         
         slider.value = bonus[slider.name];
         
-      } /* close if targetSlider */
+      } /* close if targetSlider condition */
       
     }); /* close ui.sliders loop */
 
@@ -289,19 +287,9 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
     Object.assign(player, bonus);
 
-  } /* close customize function */
+  } /* close ui.customize function */
 
 }; /* close ui global var */
-
-
-/*================================================
-
-To finish it up we just need to start our user
-interface.
-
-=================================================*/
-
-ui.start();
 
 /*================================================
 

@@ -153,7 +153,7 @@ and use our draw mirrored circle function.
       draw.circleMirrored(color, bullet);
     });
     
-  }, /* close draw ship function */
+  }, /* close playerDraw.ship function */
 
   
 /*=================================================
@@ -177,15 +177,15 @@ draw their ship as well.
         
       if (!p.actionInput.editing) playerDraw.ship(p);
 
-    }) /* close playerList loop */
+    }) /* close game.playerList loop */
 
-  } /* close draw allShips function */
+  } /* close playerDraw.allShips function */
   
 }; /* close playerDraw global var */
 
 /*=================================================
 
-Next lesson p10-game-loop.js is the last one! 
+Next lesson "P10-game-loop.js" is the last one.
 Keep going, you are almost there!
 
 =================================================*/

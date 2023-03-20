@@ -79,6 +79,7 @@ Our canvas will have a beautiful background.
   grid-row: 1;
   grid-column: 1;
   background: linear-gradient(67deg, #000 0%,#203 67%, #000 100%);
+  width: 90vmin;
 }
 
 /*=================================================
@@ -156,14 +157,11 @@ the full rown and push down the next element.
 Learn a but more  about the display property here:
 https://www.w3schools.com/cssref/pr_class_display.php
 
-Let's also add some transparency just for fun!
-
 =================================================*/
 
 .ui label {
   font-size: 3.5vmin;
   display: block;
-  opacity: 0.8;
 }
 
 /*=================================================
@@ -350,10 +348,28 @@ to achieve that lets set display to none.
   display: none;
 }
 
+
+/*=================================================
+
+We want the TV effect to be drawn on top of our 
+canvas and user interface. We don't want it to 
+block the user from clicking the interface so we 
+set it to have no pointer events.
+
+=================================================*/
+
+.screenEffect {
+  pointer-events: none;
+  grid-row: 1;
+  grid-column: 1;
+  width: 100vw;
+  height: 100vh;
+}
+
 /*=================================================
 
 Now that we have the style configured, let's dive 
-into our world, open "p03-world.js"
+into our world, open "P03-world-astedoids.js"
 
 =================================================*/
 

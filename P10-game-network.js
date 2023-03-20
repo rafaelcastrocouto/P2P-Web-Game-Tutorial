@@ -47,7 +47,7 @@ the play button.
       game.playerList[player.id] = player;
       ui.toggleButtons.play.disabled = false;
       
-    }); /* close 4webReady event */
+    }); /* close network ready event listener */
 
 /*================================================
 
@@ -70,7 +70,7 @@ order to reuse it later.
       
       network.list[event.detail.id] = connection;
       
-    }); /* close connection event */
+    }); /* close netowrk connection event listener */
     
 /*================================================
 
@@ -112,7 +112,7 @@ asteroids position.
         var isInCharge = (player == playerInCharge);
         player.inChargeOfAstroids = isInCharge;
         
-      } /* close if data.player */
+      } /* close if data.player condition */
 
 /*================================================
 
@@ -127,7 +127,7 @@ asteroids list when we are not in charge of them.
           asteroids.list = data.asteroids;
         }
         
-      } /* close if data.asteroids */
+      } /* close if data.asteroids condition */
 
 /*================================================
 
@@ -142,11 +142,11 @@ asteroids if when we are in charge of them.
           asteroids.spawnSmallAsteroids(a);
         }
         
-      } /* close if data.hit */
+      } /* close if data.hit condition */
       
-    }); /* close 4webData event */
+    }); /* close network data event listener */
     
-  }, /* close network start function */
+  }, /* close network.start function */
 
 /*================================================
 
@@ -164,7 +164,7 @@ A simple loop will do the trick.
       connection.send(data);
     });
     
-  } /* close broadcast function */
+  } /* close network.broadcast function */
   
 }; /* close network global var */
 
@@ -198,17 +198,30 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
 /*================================================
 
-Now let's create our game start function.
+Now let's create our game start function and 
+create our starfield.
 
 =================================================*/
   
   start: function () {
+
+    worldDraw.buildStars();
     
 /*================================================
 
-First we initialize our game network.
+Now we attach all our user control events.
 
 =================================================*/
+    
+    ui.start();
+    keyboard.start();
+    
+/*================================================
+
+All set to initialize our game network.
+
+=================================================*/
+    
     
     if (window['net4web']) network.start();
     
@@ -232,7 +245,7 @@ We also need to enable the play button.
       
       ui.toggleButtons.play.disabled = false;
       
-    } /* close else singleplayer */
+    } /* close else singleplayer condition */
     
 /*================================================
 
@@ -243,7 +256,7 @@ loop with it's first single call.
     
     game.frameProcess();
     
-  }, /* close start function */
+  }, /* close game.start function */
 
 /*================================================
 
@@ -264,7 +277,7 @@ asteroids and players positions.
   /*================================================
   
   We also need to check if our bullets are hitting.
-  We need to use our collide funcion to check each
+  We need to use our collide function to check each
   asteroid on our list against a each bullet.
   
   =================================================*/
@@ -274,7 +287,7 @@ asteroids and players positions.
       loop(player.bullets, function(b, bulletIndex) {
 
         if (asteroids.collide(a, b)) {
-          asteroids.collision(a, asteroidIndex, bulletIndex);
+          asteroids.hit(a, asteroidIndex, bulletIndex);
         };
     
       }); /* close player.bullets loop  */
@@ -300,9 +313,9 @@ inside our map limits.
 
       network.broadcast({asteroids: asteroids.list});
       
-    } /* close if inChargeOfAstroids */
+    } /* close if player.inChargeOfAstroids condition */
     
-  }, /* close framePhysics function  */
+  }, /* close game.framePhysics function */
   
 /*================================================
 
@@ -328,7 +341,10 @@ is not editing the ship.
       worldDraw.allAsteroids();
       playerDraw.allShips();
     }
-  },
+    
+    tvEffect();
+    
+  },  /* close game.frameDraw function */
 
 /*================================================
 
@@ -364,7 +380,7 @@ Then we draw everything and loop the frame process.
     game.frameDraw();
     requestAnimationFrame(game.frameProcess);
     
-  } /* close frameProcess funcion */
+  } /* close game.frameProcess function */
   
 }; /* close game global var */
 

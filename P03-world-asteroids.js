@@ -121,11 +121,11 @@ we have finished creating the asteroid.
 
     r: a.size + (Math.random() * a.delta)
 
-  };  /* close asteroid */
+  };  /* close asteroid object */
 
   return asteroid;
   
-};
+}; /* close buildAsteroid global function */
 
 /*================================================
 
@@ -148,7 +148,7 @@ var loop = function (startOrArrayOrObject, endOrCallback, callback) {
       callback(index);
     }
     
-  } /* close start end number loop */
+  } /* close if start is number condition */
     
   if (startOrArrayOrObject.constructor.name == 'Array') {
     
@@ -160,7 +160,7 @@ var loop = function (startOrArrayOrObject, endOrCallback, callback) {
       callback(item, index);
     }
     
-  } /* close array loop */
+  } /* close if start is array condition */
 
 /*================================================
   
@@ -181,10 +181,9 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
       callback(item, key);
     }
     
-  } /* close object loop */
+  } /* close if start is object condition */
   
-}; /* close loop function */
-
+}; /* close loop global function */
 
 /*================================================
 
@@ -344,7 +343,7 @@ we can be sure that they are colliding.
     
     return (d < (a.r + b.r));
 
-  }, /* close collide function */
+  }, /* close asteroids.collide function */
 
   
 /*================================================
@@ -357,7 +356,7 @@ BOOM!!!
 
 =================================================*/
   
-  collision: function (a, asteroidIndex, bulletIndex) {
+  hit: function (a, asteroidIndex, bulletIndex) {
 
 /*================================================
 
@@ -396,7 +395,7 @@ asteroids so we build new ones.
         asteroids.list = asteroids.build();
       }
       
-    } /* close if player.inChargeOfAstroids */
+    } /* close if player.inChargeOfAstroids condition */
     
 /*================================================
 
@@ -421,49 +420,39 @@ everyone that we were able to hit.
          network.broadcast({hit: a});
        }
        
-     }  /* close if big asteroid  */
+     }  /* close if big asteroid condition */
   
-  }, /* close collision funcion */
+  }, /* close asteroids.hit function */
 
   
 /*================================================
 
 When a big asteroid is destroyed, it will spawn two
 smaller and faster asteroids on the same position
-of the explosion.
+of the big asteroid.
+
+We are going to loop two times, it's not pretty 
+but it's better than ctrl+c and ctrl+v.
 
 =================================================*/
 
   spawnSmallAsteroids: function (bigA) {
-
-/*================================================
-
-Now let's loop two times, it's not pretty but
-it's better than ctrl+c and ctrl+v.
-
-=================================================*/
-
     loop(0, 2, function () {
-      
       var smallA = buildAsteroid(smallAsteroid);
-
       smallA.x = bigA.x; /* same x position */
       smallA.y = bigA.y, /* same y position */
-      
       asteroids.list.push(smallA);
+    });
+  }
 
-    }); /* close smallAsteroid loop */
-    
-  } /* close smallAsteroids function */
-
-}; /* close asteroids methods */
+}; /* close asteroids global var */
 
 /*================================================
 
 Now that we have a galaxy full of asteroids,
 let's make our ships and let our players 
 shoot and destroy them! Go on to the next
-lesson: "p04-player-management.js"
+lesson: "P04-player-physics.js"
 
 =================================================*/
 

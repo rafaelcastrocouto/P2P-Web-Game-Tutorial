@@ -3,8 +3,7 @@
 PART 7: Drawing on the canvas
 
 It's time to draw our ships and asteroids on 
-the screen. To achieve that we are going to use
-the canvas API.
+the screen with the canvas API. 
 https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
 The first thing to do is to get the context, this
@@ -12,26 +11,20 @@ is where all canvas methods are stored.
 We will use the '2d' context that allow us to draw
 lines, arcs, images, rectangles, etc. 
 
-The other possible values for the context are: 
-"webgl" and "webgl2" that produce a 3d context
-and "bitmaprenderer" that draw image bitmaps.
-Maybe someday I'll alsowrite a tutorial for them.
-
 =================================================*/
 
 var canvas = document.querySelector('.screen');
-
 var ctx = canvas.getContext('2d');
 
 /*================================================
 
-We want all our lines ends to be rounded so let's 
-set the line cap value to round.
-https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
+The width and height tells the number of pixels
+the browser will calculate for the canvas.
 
 =================================================*/
 
-ctx.lineCap = "round";
+canvas.width = 256;
+canvas.height = 256; 
 
 /*================================================
 
@@ -44,25 +37,59 @@ var draw = {
   
 /*================================================
 
-To start simple, let's create a function to draw
-a single colored line. First we project each
-point to our camera then we use the canvas API
-to stroke our line. Let's also set a default line
-width of 1 pixel.
+To create custom RGB (red, green and blue ) colors
+we will use the customization values. 
+If you are not familiar with RGB take a look here:
+https://en.wikipedia.org/wiki/RGB_color_model
+
+Let's use the attack for our red channel, the 
+speed for the green and the control for the blue.
+
+Since the customization values go from 0 to 100
+we need to scale them. 
+
+=================================================*/
+
+  color: function (p) {
+    var r = p.attack * 2.5;
+    var g = p.speed * 2.5;
+    var b = p.control * 2.5;
+    return 'rgba('+r+','+g+','+b+', 1)';
+  },
+  
+/*================================================
+
+With our color function we can now create a 
+function to draw a single colored line. 
+First we project each point to our camera 
+then we use the canvas API to stroke our line. 
+Let's also set a default line width of 1 pixel.
 
 =================================================*/
 
   line: function (color, start, end, width=1) {
-    ctx.lineWidth = width;
+    
     var s = draw.projectToCamera(start);
     var e = draw.projectToCamera(end);
+
+/*================================================
+
+We want all our lines ends to be rounded so let's 
+set the line cap value to round.
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
+
+=================================================*/
+
+    ctx.lineCap = "round";    
+    ctx.lineWidth = width;
     ctx.strokeStyle = color;
     ctx.beginPath();
     ctx.moveTo(s.x, s.y);
     ctx.lineTo(e.x, e.y);
     ctx.stroke();
     ctx.closePath();
-  },
+    
+  }, /* close draw.line function */
 
 /*================================================
 
@@ -100,14 +127,13 @@ And let's use the canvas API to draw an full arc.
     ctx.lineWidth = width;
     ctx.fillStyle = fill;
     ctx.strokeStyle = color;
-    
     ctx.beginPath();
     ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
     ctx.stroke();
     ctx.fill();
     ctx.closePath();
     
-  }, /* close circle function */
+  }, /* close draw.circle function */
 
 /*================================================
 
@@ -138,7 +164,7 @@ subtract the factor from the maximum desired value.
     ctx.fillStyle = color;
     ctx.fillRect(p.x, p.y, size, size);
     
-  }, /* close dot function */
+  }, /* close draw.dot function */
 
 /*================================================
 
@@ -186,17 +212,11 @@ assume it's equal to 0.
 
 /*================================================
 
-First we pre-store our camera rotation sines and 
-cosines for performance reasons.
+First we pre-store our camera rotation cosines 
+to avoid recalculating them.
 
 =================================================*/
-    
-    var sin = {
-      x: Math.sin(c.rotation.x),
-      y: Math.sin(c.rotation.y),
-      z: Math.sin(c.rotation.z),
-    };
-    
+
     var cos = {
       x: Math.cos(c.rotation.x),
       y: Math.cos(c.rotation.y),
@@ -322,8 +342,7 @@ Now we can return our projected point to be drawn.
     
     return d2;
 
-  }, /* close projectToCamera function */
-
+  }, /* close draw.projectToCamera function */
 
 /*=================================================
 
@@ -360,7 +379,6 @@ to the left.
       c.position.x += 0.05;
       world.limit(c.position);
     }
-    
 
   }, /* close draw player function */
   
@@ -382,13 +400,11 @@ that's when x and y are equal to 0.
 =================================================*/
 
   loopXY: function (callback) {
-    
     loop( -1, 2, function (x) {
       loop( -1, 2, function (y) {
         callback(x, y);
       });
     });
-        
   },
 
 /*================================================
@@ -398,7 +414,6 @@ Now we can draw mirrored dots, circles and lines.
 =================================================*/
   
   dotMirrored: function (color, p) {
-
     draw.loopXY(function (x, y) {
        var mp = {
         x: p.x + (x * world.width),
@@ -407,8 +422,7 @@ Now we can draw mirrored dots, circles and lines.
       };
       draw.dot(color, mp);
     });
-    
-  }, /* close dotMirrored function */
+  },
 
 /*================================================
 
@@ -422,7 +436,6 @@ fill color values.
 =================================================*/
   
   circleMirrored: function (color, c, width, fill) {
-    
     draw.loopXY(function (x, y) {
        var mc = {
         x: c.x+(x*world.width),
@@ -431,8 +444,7 @@ fill color values.
       };
       draw.circle(color, mc, width, fill);
     });
-    
-  }, /* close circleMirrored function */
+  },
 
 /*================================================
 
@@ -450,39 +462,17 @@ on our ships. For brevity start = s and end = e
         y: s.y+(y*world.height),
         z: s.z
       };
-       var end = {
+      var end = {
         x: e.x+(x*world.width),
         y: e.y+(y*world.height),
         z: e.z
       };
       draw.line(color, start, end, width);
         
-    }); /* close loopXY */
+    }); /* close loopXY function */
     
-  }, /* close lineMirrored function */
+  }, /* close draw.lineMirrored function */
 
-/*================================================
-
-To create custom RGB (red, green and blue ) colors
-we will use the customization values. 
-If you are not familiar with RGB take a look here:
-https://en.wikipedia.org/wiki/RGB_color_model
-
-Let's use the attack for our red channel, the 
-speed for the green and the control for the blue.
-
-Since the customization values go from 0 to 100
-we need to scale them. 
-
-=================================================*/
-
-  color: function (p) {
-    var r = p.attack * 2.5;
-    var g = p.speed * 2.5;
-    var b = p.control * 2.5;
-    return 'rgba('+r+','+g+','+b+', 1)';
-  },
-  
 /*================================================
 
 Last we have simple function that just clears out
@@ -498,10 +488,13 @@ all our canvas screen with the clearRect method.
 
 /*================================================
 
+That was the longest lesson, if you made this far
+you the next ones will be easy.
+
 Next we are going to use this functions to draw a 
 parallax starfield.
 
-What are you waiting for? Go to P08-world-draw.js!
+What are you waiting for? Go to "P08-world-stars.js"
 
 =================================================*/
 

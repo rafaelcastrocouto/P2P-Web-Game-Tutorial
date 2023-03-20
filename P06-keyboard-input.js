@@ -69,7 +69,7 @@ state set to true.
 
        // network.broadcast({ input: player.actionInput });
 
-      }  /* close if pressAction */
+      }  /* close if pressAction condition */
 
 /*================================================
 
@@ -81,7 +81,7 @@ If the user presses E or escape we toggle the UI.
         ui.toggle(!player.actionInput.editing);
       }
 
-    });  /* close addEventListener keydown */
+    });  /* close keydown event listener */
 
 /*================================================
 
@@ -100,23 +100,16 @@ event, but our state will now be false;
        // network.broadcast({ input: player.actionInput });
       }
       
-    });/* close addEventListener keyup */
+    });/* close keyup event listener */
 
-  } /* close start function */
+  } /* close keyboard.start function */
 
 }; /* close keyboard global var */
 
 /*================================================
 
-=================================================*/
-
-keyboard.start();
-
-/*================================================
-
-And that's all for our keyboard inputs.
-Let's build our mouse interactions in our next 
-lesson "p11-client-mouse"
+And that's all for our keyboard inputs. Let's 
+start drawing on lesson "P07-canvas-draw.js"
 
 =================================================*/
 
