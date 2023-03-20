@@ -1,0 +1,314 @@
+/*================================================
+
+PART 5: User interface
+
+To make our user interface work we will create 
+three methods. Two of them will let the user
+enter and leave the UI. The last one will
+allow him to customize his ship.
+
+As before we will define it as a global variable
+to make it accessible to our other client files.
+
+=================================================*/
+
+var ui = {
+  
+/*================================================
+
+First lets get all our user interface DOM elements, 
+so we can control them with JS.
+
+Read mode about the DOM here: 
+https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
+
+=================================================*/
+ 
+  start: function () {
+
+/*================================================
+
+We need to select the shipMenu container and the 
+mobileMenu container.
+
+Let's get them with the "querySelector" method.
+https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
+
+=================================================*/ 
+   
+    ui.menus = {
+      shipMenu: document.querySelector('.shipMenu'),
+      mobileMenu: document.querySelector('.mobileMenu')
+    }
+/*================================================
+
+We also need to select all sliders and buttons.
+To avoid doing it one by one let's use some arrays.
+
+=================================================*/
+    
+    ui.sliders = {};
+    
+    loop(['attack','speed','control'], function (n) {
+      ui.sliders[n] = document.querySelector('input[name='+n+']')
+    });
+
+/*================================================
+
+We do the same for our mobile controls.
+
+=================================================*/
+    
+    ui.mobileControls = {};
+     
+    loop(['up','left','right','shoot'], function (n) {
+      ui.mobileControls[n] = document.querySelector('button[name='+n+']')
+    });
+
+/*================================================
+
+And we also need to save our menu toggle buttons.
+
+=================================================*/
+    
+    ui.toggleButtons = {};
+    
+    loop(['play','edit'], function (n) {
+      ui.toggleButtons[n] = document.querySelector('button[name='+n+']')
+    });
+   
+/*================================================
+
+Now let's start listening to the user inputs.
+
+For each slider we are going to listen to
+three events: "change", "mousemove", "keyup".
+
+All of them will trigger the "ui.customize" function
+we just created.
+
+We have two nested loops here, they will apply 
+all events to all sliders.
+
+=================================================*/
+
+    var sliderEvents = ['change','mousemove','keyup'];
+    
+    loop(ui.sliders, function (slider) {
+      loop(sliderEvents, function (event) {
+        slider.addEventListener(event, ui.customize);
+      });
+    });
+   
+/*================================================
+
+Then we attach the "ui.toggle" method to the our
+play button. It will be triggered when clicked
+and will allow the player to leave the user
+interface and start playing.
+
+=================================================*/
+
+    ui.toggleButtons.play.addEventListener('click', function () {
+      ui.toggle(false);
+    });
+
+/*================================================
+
+Next we attach the "toggle" method to the our
+Edit button. It will allow the player to get
+back to the ui.
+
+=================================================*/
+
+    ui.toggleButtons.edit.addEventListener('click', function () {
+      ui.toggle(true);
+    });
+
+/*================================================
+
+Now we attach events to each one of our control 
+buttons. They will also work for touch devices.
+
+=================================================*/
+    
+    loop(ui.mobileControls, function (control) {
+      
+      var press = function (event) {
+        player.actionInput[event.target.name] = true;
+       // network.broadcast({ input: player.actionInput });
+      };
+      
+      control.addEventListener('touchstart', press);
+      control.addEventListener('mousedown', press);
+
+      var release = function (event) {
+        player.actionInput[event.target.name] = false;
+       // network.broadcast({ input: player.actionInput });
+      };
+      
+      control.addEventListener('mouseup', release);
+      control.addEventListener('touchend', release);
+     
+    }); /* close ui.mobileControls loop */
+
+  }, /* close start function */
+   
+/*================================================
+
+Now let's create a way for our user to leave 
+the edit screen and start playing.
+
+First we need toggle the menus.
+
+=================================================*/
+
+  toggle: function (state) {
+    
+    ui.menus.shipMenu.classList.toggle('hidden');
+    ui.menus.mobileMenu.classList.toggle('hidden');
+
+/*================================================
+
+We also need to broadcast the player data to
+share it with our peers.
+
+=================================================*/
+  
+    player.actionInput.editing = state;
+   // network.broadcast({ player });
+
+
+/*================================================
+
+If we start to play and there are no asteroids
+in our list we build and broadcast them.
+
+=================================================*/    
+
+    if (state == false && asteroids.list.length == 0) {
+
+      if (game.numberOfPlayers() == 1) {
+        player.inChargeOfAstroids = true;
+      }
+      
+      if (player.inChargeOfAstroids) {
+        asteroids.list = asteroids.build();
+      }
+      
+    }
+
+    
+  }, /* close toggle function */
+
+/*================================================
+
+That was easy! Now let's create the method that 
+will allow the ship customization.
+
+=================================================*/
+
+  customize: function (event) {
+
+/*================================================
+
+First let's store the currently targeted slider.
+Read more about the events here:
+https://developer.mozilla.org/en-US/docs/Web/API/Event
+
+=================================================*/
+
+    var targetSlider = event.target;
+
+/*================================================
+
+Now let's list all our current bonus values.
+
+=================================================*/
+
+    var bonus = {};
+   
+    loop(ui.sliders, function (slider) {
+      bonus[slider.name] = Number(slider.value);
+    });
+
+/*================================================
+
+The total sum of bonus points is 150, that's 3 times
+our default input value (50). Let's sum up all user
+customization bonus and check if the player has any
+extra points.
+
+=================================================*/
+
+    var sum = bonus.attack + bonus.speed + bonus.control;
+    var extraPoints = (sum - 150);
+
+/*================================================
+
+For each slider that is not the one being 
+targeted we are going to subtract those extra
+points. But since we have two extra sliders to 
+edit, we are going to divide this value by two.
+
+=================================================*/
+    
+    loop(ui.sliders, function (slider) {
+      
+      if (targetSlider !== slider) {
+        bonus[slider.name] -= (extraPoints/2);
+
+/*================================================
+
+Then we assign the new value in order to move the
+slider with the new bonus value.
+
+=================================================*/  
+        
+        slider.value = bonus[slider.name];
+        
+      } /* close if targetSlider */
+      
+    }); /* close ui.sliders loop */
+
+/*================================================
+
+Now let's replace this bonus values to our player
+object using the Object.assign. The pratical 
+effect is the same as: 
+
+  player.attack  = bonus.attack;
+  player.speed   = bonus.speed;
+  player.control = bonus.control;
+
+But with the advantage of doing it in a single line
+Read more about the assign method here:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+
+=================================================*/
+
+    Object.assign(player, bonus);
+
+  } /* close customize function */
+
+}; /* close ui global var */
+
+
+/*================================================
+
+To finish it up we just need to start our user
+interface.
+
+=================================================*/
+
+ui.start();
+
+/*================================================
+
+That's the end of our user interface lesson!
+Next we are going to learn how to respond to the
+user keyboard events. Go on and open our next
+lesson: "p10-client-keyboard"
+
+=================================================*/
+

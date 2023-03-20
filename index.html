@@ -1,0 +1,376 @@
+<!--==============================================
+
+PART 1: Welcome to me web game tutorial!
+
+Our goal here is to build a space shooter.
+
+At any time during this tutorial you can change
+the code to test how it works. Don't worry if you
+break it, you can always undo with ctrl+z or just
+navigate back to the original repl.it to reset.
+
+We are gonna use three languages, HTML, CSS and JS. 
+If you are not familiar with then, please 
+take some time just to learn the basics:
+
+https://www.w3schools.com/html/
+https://www.w3schools.com/css/
+https://www.w3schools.com/js/
+
+Now that we are familiar with our languages,
+let's put'em to good use. 
+
+HTML are the files that are downloaded 
+by the browser when a user open any web page. 
+When you go to a website like: 
+
+  http:// www.site.com/someFile.txt
+
+As expected, the default server configuration
+will download the file "someFile.txt".
+
+But when you don't write the file and go to:
+
+  http://www.site.com
+
+servers will most likely respond with the 
+"index.html" located in the corresponding 
+directory. as if you typed:
+
+  http://www.site.com/index.html
+
+So this is OUR index.html, our main structure.
+The game will have only one HTML file,
+this will make things easier!
+
+So lets start our HTML5 coding!
+We will tell the browser that we are using the
+last version of HTML with the doctype declaration.
+
+==============================================-->
+
+<!DOCTYPE html>
+
+<!--==============================================
+
+That's it, now we are ready to write down our
+elements. Let's start diving into HTML markup.
+
+==============================================-->
+
+<html>
+
+<!--==============================================
+
+In HTML we have a basic structure that divides
+the head (meta data) and the body (content).
+Let's start with the meta data.
+
+==============================================-->
+
+  <head>
+
+<!--==============================================
+
+Now we are inside out HTML head. Braaains!!!
+Here we'll import our CSS files, this files will
+tell the browser the style of our HTML elements.
+
+The head is a good place for them because when the
+browser starts to render the page, we want all this
+style data to be already defined.
+
+The <link> tag will download and apply the style
+pointed in the "href" attribute.
+
+==============================================-->
+
+    <link href="2-styles.css" rel="stylesheet" type="text/css">
+
+<!--==============================================
+
+As you might have guessed by the file name, 
+we are going to dive into the style on part 2.
+    
+The last thing we are going to put in the head is
+the HTML title. It will tell the browser what to
+write at the window/tab top bar.
+
+==============================================-->
+
+    <title>Space Game Title</title>
+
+<!--==============================================
+
+We want to support mobile devices screen. This
+meta tag will inform the smartphones how to 
+render our game dimensions correctly.
+
+==============================================-->
+
+    <meta name="viewport" content="width=device-width"/>
+    
+<!--==============================================
+
+We are done with our head elements,
+so let's close our tag:
+
+==============================================-->
+
+  </head>  <!-- close head -->
+
+<!--==============================================
+
+Time for some body work! 
+Here we gonna put the elements that will appear
+on the user interface screen and our JS scripts.
+
+We are going to use only six types of HTML tags 
+in our body:
+
+1: A title heading: <h1>Title</h1>
+2: Divisions to nest other elements: <div><...></div>
+3: We use a canvas to draw things: <canvas>Text</canvas>
+4: A caption for our sliders <label>Text</label>
+5: Input sliders to costumize our ships: <input type="range" />
+6: And buttons for user to interaction: <button>Text</button>
+
+  <input type="button" value="Click here"/>
+  <input type="range" value="50"/>
+
+We could (and probably should) use other tags,
+since HTML should be as semantic as possible.
+But let's keep it simple for this tutorial.
+
+So now we have all we need to start our 
+<body> structure. 
+  
+==============================================-->
+  
+  <body>
+
+<!--==============================================
+    
+All our content will live
+inside a container <div>, this will make easy 
+for us to center it on screen.
+
+With the class attribute we can name our elements
+and later we will be able to reference or query 
+them in our CSS and JS code with SELECTORS.
+If you are not familiar with this
+concept you can learn about it here:
+https://www.w3schools.com/cssref/css_selectors.asp
+
+==============================================-->
+
+    <div class="container">
+
+<!--==============================================
+
+Elements are rendered on screen in order of 
+appearance (last elements are on top), 
+unless you change this with your CSS code.
+So the first thing on our container will be our 
+<canvas> element because we want it below all
+other elements.
+      
+The easiest way to understand the canvas element
+is to think of it as a Microsoft's Paint but you
+can only draw with JS code.
+
+We will learn how to use the canvas on p07, 
+but if you are curious, you can quickly learn the
+basic stuff in here:
+https://www.w3schools.com/graphics/canvas_intro.asp
+
+==============================================-->
+
+      <canvas class="screen">No canvas support</canvas>
+      
+<!--==============================================
+
+Next we will build our user interface.
+As before let's put it all in a div,
+for styling and organization. HTML allows
+a div to have other div childs, that creates
+a tree like structure that after parsed by the
+browser is called DOM.
+https://www.w3schools.com/js/js_htmldom.asp
+      
+==============================================-->
+
+      <div class="ui">
+      
+<!--==============================================
+
+We will build two interfaces for thew user, the
+ship sliders. and the mobile controls.
+
+Let's start with the ship user interface menu. 
+We will also put them all inside a <div>
+      
+==============================================-->
+
+        <div class="shipMenu">
+          
+<!--==============================================
+
+The game title will have a bigger font, so we
+put it into a heading tag.
+      
+==============================================-->
+          
+          <h1>Space Game</h1>
+          
+<!--==============================================
+
+Now let's add some sliders, they will 
+allow the player to customize their ship.
+The default values for the range elements are:
+
+<input type="range" min="0" max="100" step="1" value="50">
+
+Since those values are fine for us, 
+I will omit them for brevity's sake,
+but try to keep them in mind.
+
+Let's make three slider: attack, speed and control.
+Each one of them will be preceded by a explanatory
+text, inside a <label> tag.
+
+==============================================-->
+          
+          <!-- attack slider -->
+          <label for="attack">Attack: X OR Space</label>
+          <input name="attack" type="range" />
+          
+          <!-- speed slider -->
+          <label for="speed">Speed: W or Up Arrow</label>
+          <input name="speed" type="range" />
+          
+          <!-- control slider -->
+          <label for="control">Control: A-D or Left-Right</label>
+          <input name="control" type="range" />
+
+<!--==============================================
+
+The next item in our user interface is a button.
+There's no game without a button, right?
+The 'play' button will allow the player close 
+the ship customization menu and start playing.
+
+We are going to enable it in our JavasCript code.
+          
+==============================================-->
+
+          <button name="play" disabled>Play</button>
+
+        </div> <!-- close div.shipMenu -->
+
+<!--==============================================
+
+The next menu will allow users to play on mobile
+devices or by clicking with the mouse. 
+This menu will start hidden and only appear 
+after the play button is pressed.
+
+==============================================-->
+
+      <div class="mobileMenu hidden">
+
+<!--==============================================
+
+Let's group up the movement buttons to make it
+easier to control their position.
+        
+==============================================-->
+        
+        <div>
+          <button name="up">Move</button>
+          <div class="mobileControls">
+            <button name="left"><</button>
+            <button name="right">></button>
+          </div>
+        </div>
+
+<!--==============================================
+
+Our last buttons will allow player to edit their
+ship customization and to shoot.
+        
+==============================================-->
+        
+        <button name="edit">Edit</button>
+        <button name="shoot">Shoot</button>
+        
+      </div> <!-- close div.mobileUI -->
+        
+<!--==============================================
+
+That's all of our game user interface structure, 
+let's not forget to close their div elements.
+
+==============================================-->
+
+      </div>  <!-- close div.ui -->
+      
+    </div>  <!-- close div.container -->
+
+<!--==============================================
+
+The last thing we need to do in the HTML 
+is to import all the JS code. 
+The <script> tag will to just that, we just need
+to write down each "src" attribute.
+It's important to remember that  they will 
+be executed in order.
+    
+4web is the module that will take care of our
+network sharing the p2p connections and use 
+the revolt channel as our signaling service.
+
+Learn more about importing modules here:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
+    
+==============================================-->
+
+    <script src="./lib/4web.js" type="module"></script>
+
+<!--==============================================
+
+Now we list all JS code we are going to learn
+in the following lessons:
+
+==============================================-->
+    
+<!--             1 index.html that's the file we are right now      -->
+<!--             2-styles.css we've already imported it in the head -->
+    <script src="3-world-asteroids.js" type="text/javascript"></script>
+    <script src="4-player-physics.js"  type="text/javascript"></script>
+    <script src="5-user-interface.js"  type="text/javascript"></script>
+    <script src="6-keyboard-input.js"  type="text/javascript"></script>
+    <script src="7-canvas-draw.js"     type="text/javascript"></script>
+    <script src="8-world-stars.js"     type="text/javascript"></script>
+    <script src="9-player-ship.js"     type="text/javascript"></script>
+    <script src="10-game-network.js"   type="text/javascript"></script>
+
+<!--==============================================
+
+And that's the end of our game HTML, 
+now we can close the <body> and the <html>.
+
+==============================================-->
+
+  </body>  <!-- close body -->
+  
+</html>  <!-- close html -->
+
+<!--==============================================
+
+Next we will learn how to style our elements and
+make them shine with our CSS code. 
+So go on and open the "p02-styles.css" file.
+
+==============================================-->
+

@@ -1,0 +1,359 @@
+/*=================================================
+
+PART 2: Now let's add some CSS style to our game!
+
+First we are gonna pick a nice pixel art font
+from Google Fonts, it's free and easy to use.
+
+The code below imports the font woff file,
+you can grab this code from the Google Fonts
+website or you can use their pre made CSS.
+https://fonts.google.com/
+
+=================================================*/
+
+@font-face {
+  font-family: 'Silkscreen';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(font/Silkscreen.woff2) format('woff2')
+}
+
+.ui h1,
+.ui label,
+.ui button {
+  font-family: 'Silkscreen', monospace;
+}
+
+/*=================================================
+
+The body element will have no margin or padding and
+will paint all the screen with a black color.
+
+In CSS the unit "1vw" is equivalent to 1% of the
+window inner width, and "vh" is equivalent to 1%
+of the height. 
+
+To hide all scroll bars we use overflow: hidden.
+
+=================================================*/
+
+body {
+  margin:0;
+  padding:0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  overflow: hidden;
+}
+
+
+/*=================================================
+
+Remember the body only have one child that will be
+rendered on screen, the container element.
+
+Inside the container we have our "canvas.screen" 
+and the user interface. We want them to be rendered
+on top of each other, to achieve this we will
+use the grid  property.
+Read more about it in this useful article:
+https://css-tricks.com/snippets/css/complete-guide-grid/
+
+=================================================*/
+
+.container {
+  display: grid;
+  place-items: center;
+  height: 100svh;
+}
+
+/*=================================================
+
+Our canvas will have a beautiful background.
+
+=================================================*/
+
+.screen {
+  grid-row: 1;
+  grid-column: 1;
+  background: linear-gradient(67deg, #000 0%,#203 67%, #000 100%);
+}
+
+/*=================================================
+
+The user interface will be positioned on top of
+the canvas screen. to achive it we will use 
+the same row and column in our grid layout. 
+It will also allow us to easily position our 
+ship and mobile user interface.
+
+To have a better understanding of the CSS stacking 
+context, take a look at this link:
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context.
+
+We prevent text selection with "user-select".
+
+=================================================*/
+
+.ui {
+  grid-row: 1;
+  grid-column: 1;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  user-select: none;
+}
+
+
+/*=================================================
+
+We are going to use the "display: grid" again to
+keep our sliders in place. 
+
+=================================================*/
+
+.ui .shipMenu {
+  display: grid;
+  place-content: center;
+}
+
+/*=================================================
+
+Our text style will be applied to all our title,
+labels and buttons. We add a white color and some
+text shadow to make it shinier!
+Let's also align their text to the center.
+
+=================================================*/
+
+.ui h1,
+.ui label,
+.ui button {
+  color: white;
+  text-shadow: 0 0 5vmin white, 0 0 8vmin white;
+  text-align: center;
+}
+
+/*=================================================
+
+Our game title font and margin dimensions.
+
+=================================================*/
+
+.ui h1 {
+  font-size: 10vmin;
+  margin: 0 0 4vmin;
+}
+
+/*=================================================
+
+Now we configure our label texts.
+Setting 'display: block' will assure it will take
+the full rown and push down the next element.
+
+Learn a but more  about the display property here:
+https://www.w3schools.com/cssref/pr_class_display.php
+
+Let's also add some transparency just for fun!
+
+=================================================*/
+
+.ui label {
+  font-size: 3.5vmin;
+  display: block;
+  opacity: 0.8;
+}
+
+/*=================================================
+
+Let's make the mouse cursor transform into a pretty 
+hand when interacting with our sliders and buttons.
+
+=================================================*/
+
+.ui input,
+.ui button {
+  cursor: pointer;
+}
+
+/*=================================================
+
+Let's make our sliders dimensions more responsive.
+Notice that we use (%) unit  instead of "vw".
+With percentages the value will be realtive to the
+parent element instead of the full window length.
+We also use max-width to prevent big ugly sliders
+on super wide screens.
+
+=================================================*/
+
+.ui input {
+  display: block;
+  height: 4vmin;
+  margin: 0 0 3vmin;
+  width: 100%;
+  max-width: 100vmin;
+}
+
+/*=================================================
+
+Our button font size will be a little bigger than
+our labels. And it also needs some extra padding 
+to make easy to hit them with your fingers.
+Let's also make the background animated when the
+mouse is over with the transition property.
+And put a nice round border around it.
+
+=================================================*/
+
+.ui button {
+  font-size: 4vmin;
+  padding: 3vmin;
+  background: transparent;
+  border: solid 2px white;
+  border-radius: 2vmin;
+  transition: background 0.2s;
+}
+
+/*=================================================
+
+With the ":hover" pseudo selector we can add a
+lighter background when the button is focused or
+the mouse is over our button.
+
+Always be careful while changing the focus style
+and be sure not to break any accessibility rules
+https://www.w3.org/WAI/WCAG21/Techniques/
+
+=================================================*/
+
+.ui button:hover,
+.ui button:focus,
+.ui button:disabled {
+  background: rgba(255,255,255,0.3)
+}
+
+/*=================================================
+
+We add an underline effect to the first letter of
+our buttons to hint their keyboard shotcuts with
+the ":first-letter" pseudo selector.
+Read more about pseudo selectors here:
+https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes
+
+=================================================*/
+
+.ui button:first-letter {
+  text-decoration:underline;
+}
+
+/*=================================================
+
+And we make our disabled buttons look a bit less
+interactive.
+
+=================================================*/
+
+.ui button:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+/*=================================================
+
+Let's use grid again to to keep mobile buttons
+close to the fingers but away from the mobile
+default bottom button.
+
+=================================================*/
+
+.ui .mobileMenu {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0 2vmax 10vmin;
+  align-items: end;
+  column-gap: 2vw;
+  justify-items: center;
+}
+
+/*=================================================
+
+Let's change the mobile buttons padding and margin
+in order for them to properly fit the screen.
+
+=================================================*/
+
+.ui .mobileMenu button {
+  margin: 2vmin 0 0;
+}
+
+/*=================================================
+
+Now some CSS magic to select all the direct 
+children of the mobileMenu.
+
+=================================================*/
+
+.ui .mobileMenu > * {
+  max-width: 200px;
+  width: 30vw;
+}
+
+/*=================================================
+
+We need to assure the move button will always stay 
+on top and have the same width as the left and 
+right buttons below combined.
+
+=================================================*/
+
+.ui button[name="up"] {
+  display: block;
+  width: 100%;
+}
+
+/*=================================================
+
+And let's place the left and right buttons side
+by side with a small gap between.
+
+=================================================*/
+
+.ui .mobileControls {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 2vmin;
+}
+
+/*=================================================
+
+And we can remove the single character buttons 
+first letter underline text decoration.
+
+=================================================*/
+
+.ui .mobileControls button:first-letter {
+  text-decoration: none;
+}
+
+/*=================================================
+
+And finally we will need to hide our mobile menu, 
+to achieve that lets set display to none.
+
+=================================================*/
+
+.ui .hidden {
+  display: none;
+}
+
+/*=================================================
+
+Now that we have the style configured, let's dive 
+into our world, open "p03-world.js"
+
+=================================================*/
+
