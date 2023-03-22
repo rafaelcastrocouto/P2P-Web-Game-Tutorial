@@ -66,6 +66,7 @@ https://css-tricks.com/snippets/css/complete-guide-grid/
 .container {
   display: grid;
   place-items: center;
+  filter: brightness(1.5);
 }
 
 /*=================================================
