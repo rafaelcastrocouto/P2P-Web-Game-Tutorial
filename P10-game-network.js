@@ -21,7 +21,7 @@ Start web4 network, it will create one id for us.
    
 =================================================*/
 
-    var net = net4web({ debug: 2 });
+    var net = net4web({ debug: 0 });
 
     net.on('ready', function (event) {
 
@@ -58,7 +58,7 @@ peer connection.
 =================================================*/
 
     net.on('connection', function (event) {
-      console.log('x', event)
+
       var connection = event.detail.connection;
 
 /*================================================
@@ -93,24 +93,16 @@ list and keep track of the connection date.
       if (data.player) {
         
         game.playerList[data.id] = data.player;
-        data.player.lastDate = new Date().valueOf();
+        game.playerList[data.id].lastDate = new Date().valueOf();
 
 /*================================================
 
 Now we check who is the oldest player, that's the
-one who's gonna be in charge of calculating all
-asteroids position.
+one in charge.
 
 =================================================*/
 
-        var playerInCharge = player;
-        loop(game.playerList, function (p) {
-          if (p.loginDate < player.loginDate) {
-            playerInCharge = p;
-          }
-        });
-        var isInCharge = (player == playerInCharge);
-        player.inChargeOfAstroids = isInCharge;
+        network.inChargeCheck();
         
       } /* close if data.player condition */
 
@@ -164,7 +156,28 @@ A simple loop will do the trick.
       connection.send(data);
     });
     
-  } /* close network.broadcast function */
+  }, /* close network.broadcast function */
+  
+/*================================================
+
+We need to check who is the player in charge, 
+that's the one who's gonna be calculating all
+asteroids position.
+
+=================================================*/
+  
+  inChargeCheck: function () {
+    
+    var playerInCharge = player;
+    loop(game.playerList, function (p) {
+      if (p.loginDate < player.loginDate) {
+        playerInCharge = p;
+      }
+    });
+    var isInCharge = (player == playerInCharge);
+    player.inChargeOfAstroids = isInCharge;
+    
+  } /* close network.inChargeCheck function */
   
 }; /* close network global var */
 
@@ -373,10 +386,25 @@ we calculate their movement, turning and shots.
 
 /*================================================
 
-Then we draw everything and loop the frame process.
+If we don't receive data from a player for more
+than seconds we remove them from the list. We also
+have to update who's in charge of the asteroids.
 
 =================================================*/
     
+    loop(game.playerList, function (p) {
+      if (new Date().valueOf() - p.lastDate > 2000) {
+        delete game.playerList[p.id];
+        network.inChargeCheck();
+      }
+    }); /* game.playerList loop  */
+    
+/*================================================
+
+Then we draw everything and loop the frame process.
+
+=================================================*/
+
     game.frameDraw();
     requestAnimationFrame(game.frameProcess);
     

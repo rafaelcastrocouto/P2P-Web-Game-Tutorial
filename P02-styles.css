@@ -43,7 +43,7 @@ body {
   margin:0;
   padding:0;
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   background: black;
   overflow: hidden;
 }
@@ -66,7 +66,6 @@ https://css-tricks.com/snippets/css/complete-guide-grid/
 .container {
   display: grid;
   place-items: center;
-  height: 100svh;
 }
 
 /*=================================================
@@ -80,6 +79,7 @@ Our canvas will have a beautiful background.
   grid-column: 1;
   background: linear-gradient(67deg, #000 0%,#203 67%, #000 100%);
   width: 90vmin;
+  margin-botton: 20vh;
 }
 
 /*=================================================
@@ -271,7 +271,7 @@ default bottom button.
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: repeat(3, 1fr);
-  padding: 0 2vmax 10vmin;
+  padding: 0 2vmin 18vh;
   align-items: end;
   column-gap: 2vw;
   justify-items: center;
