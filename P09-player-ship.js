@@ -185,8 +185,8 @@ draw their ship as well.
 
 /*=================================================
 
-Next lesson "P10-game-loop.js" is the last one.
-Keep going, you are almost there!
+Next lesson is "P10-audio-oscillator.js". 
+Let's make some noise!
 
 =================================================*/
 

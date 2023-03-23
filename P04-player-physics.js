@@ -306,7 +306,15 @@ that means we can shoot.
     if (!player.actionInput.editing && 
          player.actionInput.shoot && 
          s.delay < 0) {
-       
+
+/*================================================
+
+Let's start with some nice shooting sound!
+
+=================================================*/
+
+      audio.shoot();
+      
 /*================================================
 
 To allow the player to shoot again we need set our
