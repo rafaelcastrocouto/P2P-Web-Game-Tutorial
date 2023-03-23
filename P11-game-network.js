@@ -23,7 +23,7 @@ Start web4 network, it will create one id for us.
 
     var net = net4web({ 
       debug: 0,
-      channelID: '01GVQDK26HWZQ8KKJ78C1AMWVY',
+      channelId: '01GVQDK26HWZQ8KKJ78C1AMWVY',
       token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK'
     });
 
