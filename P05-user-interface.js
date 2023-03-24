@@ -196,6 +196,14 @@ in our list we build and broadcast them.
       }
       
     } /* close if no asteroids condition */
+
+/*================================================
+
+And lastly we add some audio to our button!
+
+=================================================*/    
+
+    audio.toggle();
     
   }, /* close ui.toggle function */
 

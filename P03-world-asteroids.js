@@ -350,14 +350,20 @@ we can be sure that they are colliding.
 
 The collide function we just implemented will make
 a collision check. When it happens we are goin to
-fire a collision event.
-
-BOOM!!! 
+fire a hit event.
 
 =================================================*/
   
   hit: function (a, asteroidIndex, bulletIndex) {
 
+/*================================================
+
+Let's start with some audio effect: BOOM!!! 
+
+=================================================*/  
+    
+    audio.hit();
+    
 /*================================================
 
 First we delete the bullet by removing it from the
