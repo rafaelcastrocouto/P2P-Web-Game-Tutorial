@@ -46,6 +46,8 @@ create one id for us.
     
     network.on('ready', function (event) {
 
+      network.ready = true;
+      
       player.id = event.detail.id;
 
 /*================================================
@@ -241,7 +243,6 @@ All set to initialize our game network.
 
 =================================================*/
     
-    
     if (window['net4web']) network.start();
     
 /*================================================
@@ -254,7 +255,9 @@ create an id and add the single player to the list.
 
     else {
       
-      player.id = 'singleplayer';
+      player.id = 'singlePlayer';
+
+      player.inChargeOfAstroids = true;
 
 /*================================================
 
@@ -291,7 +294,7 @@ asteroids and players positions.
     playerPhysics.shoot();
     playerPhysics.bullets();
 
-    network.broadcast({player});
+    if (network.ready) network.broadcast({player});
     
   /*================================================
   
@@ -315,13 +318,13 @@ asteroids and players positions.
     
 /*================================================
 
-Now we use our move and limit function to calculate
-new positions and make sure our asteroids are 
-inside our map limits.
+Now if we are in charge, we use our move and limit 
+function to calculate new positions and make sure 
+our asteroids are inside our map limits.
 
 =================================================*/
 
-    network.inChargeCheck();
+    if (network.ready) network.inChargeCheck();
     
     if (player.inChargeOfAstroids) {
       
@@ -332,7 +335,9 @@ inside our map limits.
   
       }); /* close asteroid.list loop  */
 
-      network.broadcast({asteroids: asteroids.list});
+      if (network.ready) {
+        network.broadcast({asteroids: asteroids.list});
+      }
       
     } /* close if player.inChargeOfAstroids condition */
     
@@ -370,8 +375,7 @@ is not editing the ship.
 /*================================================
 
 The main frame loop function will first calculate 
-alll physics, broadcast the player and asteroids
-and draw the new frame.
+all game physics and draw the new frame.
 
 Then it will call itself again in the next repaint
 with the requestAnimationFrame method.

@@ -138,7 +138,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
 =================================================*/
 
 var loop = function (startOrArrayOrObject, endOrCallback, callback) {
-  
+
   if (startOrArrayOrObject.constructor.name == 'Number') {
     
     var start = startOrArrayOrObject;
@@ -150,7 +150,8 @@ var loop = function (startOrArrayOrObject, endOrCallback, callback) {
     
   } /* close if start is number condition */
     
-  if (startOrArrayOrObject.constructor.name == 'Array') {
+  if (startOrArrayOrObject.constructor.name == 'Array' ||
+      startOrArrayOrObject.constructor.name == 'TouchList') {
     
     var array = startOrArrayOrObject;
     var callback = endOrCallback;
@@ -423,7 +424,7 @@ everyone that we were able to hit.
 
 =================================================*/
          
-       else {
+       else if (network.ready) {
          network.broadcast({hit: a});
        }
        

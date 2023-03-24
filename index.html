@@ -6,8 +6,7 @@ Our goal here is to build a space shooter.
 
 At any time during this tutorial you can change
 the code to test how it works. Don't worry if you
-break it, you can always undo with ctrl+z or just
-navigate back to the original repl.it to reset.
+break it, you can always undo and try it again.
 
 We are gonna use three languages, HTML, CSS and JS. 
 If you are not familiar with then, please 
@@ -90,7 +89,7 @@ pointed in the "href" attribute.
 <!--==============================================
 
 As you might have guessed by the file name, 
-we are going to dive into the style on part 2.
+we are going to dive into styling on part 2.
     
 The last thing we are going to put in the head is
 the HTML title. It will tell the browser what to
@@ -133,10 +132,7 @@ in our body:
 3: We use a canvas to draw things: <canvas>Text</canvas>
 4: A caption for our sliders <label>Text</label>
 5: Input sliders to costumize our ships: <input type="range" />
-6: And buttons for user to interaction: <button>Text</button>
-
-  <input type="button" value="Click here"/>
-  <input type="range" value="50"/>
+6: Buttons for user to interaction: <button>Text</button>
 
 We could (and probably should) use other tags,
 since HTML should be as semantic as possible.
@@ -176,11 +172,11 @@ So the first thing on our container will be our
 other elements.
       
 The easiest way to understand the canvas element
-is to think of it as a Microsoft's Paint but you
-can only draw with JS code.
+is to think of it as a Microsoft's Paint where 
+you can draw with JS code.
 
-We will learn how to use the canvas on p07, 
-but if you are curious, you can quickly learn the
+We will learn how to use the canvas on P07, but 
+if you are curious, you can quickly learn the
 basic stuff in here:
 https://www.w3schools.com/graphics/canvas_intro.asp
 
@@ -231,7 +227,7 @@ The default values for the range elements are:
 
 <input type="range" min="0" max="100" step="1" value="50">
 
-Since those values are fine for us, 
+Since those default values are fine for us, 
 I will omit them for brevity's sake,
 but try to keep them in mind.
 
@@ -257,10 +253,10 @@ text, inside a <label> tag.
 
 The next item in our user interface is a button.
 There's no game without a button, right?
-The 'play' button will allow the player close 
+The "play" button will allow the player close 
 the ship customization menu and start playing.
 
-We are going to enable it in our JavasCript code.
+We are going make it work with JavasCript.
           
 ==============================================-->
 
@@ -271,13 +267,16 @@ We are going to enable it in our JavasCript code.
 <!--==============================================
 
 The next menu will allow users to play on mobile
-devices or by clicking with the mouse. 
+devices by tounching or by clicking with the mouse. 
 This menu will start hidden and only appear 
 after the play button is pressed.
 
 ==============================================-->
 
       <div class="mobileMenu hidden">
+        
+        <div>
+          <button name="up">Move</button>
 
 <!--==============================================
 
@@ -285,9 +284,7 @@ Let's group up the movement buttons to make it
 easier to control their position.
         
 ==============================================-->
-        
-        <div>
-          <button name="up">Move</button>
+          
           <div class="mobileControls">
             <button name="left"><</button>
             <button name="right">></button>
@@ -336,7 +333,7 @@ It's important to remember that  they will
 be executed in order.
     
 4web is the module that will take care of our
-network sharing the p2p connections and use 
+network sharing the P2P connections and use 
 the revolt channel as our signaling service.
 
 Learn more about importing modules here:

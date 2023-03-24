@@ -13,17 +13,17 @@ https://fonts.google.com/
 =================================================*/
 
 @font-face {
-  font-family: 'Silkscreen';
+  font-family: "Silkscreen";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(font/Silkscreen.woff2) format('woff2')
+  src: url(font/Silkscreen.woff2) format("woff2")
 }
 
 .ui h1,
 .ui label,
 .ui button {
-  font-family: 'Silkscreen', monospace;
+  font-family: "Silkscreen", monospace;
 }
 
 /*=================================================
@@ -33,7 +33,9 @@ will paint all the screen with a black color.
 
 In CSS the unit "1vw" is equivalent to 1% of the
 window inner width, and "vh" is equivalent to 1%
-of the height. 
+of the height. We use "svh" to refer to the 
+smalles viewport and avoid mobile menus.
+https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
 
 To hide all scroll bars we use overflow: hidden.
 
@@ -72,15 +74,16 @@ https://css-tricks.com/snippets/css/complete-guide-grid/
 /*=================================================
 
 Our canvas will have a beautiful background.
+We use grid properties to center it.
 
 =================================================*/
 
 .screen {
+  background: linear-gradient(67deg, #000 0%,#203 67%, #000 100%);
   grid-row: 1;
   grid-column: 1;
-  background: linear-gradient(67deg, #000 0%,#203 67%, #000 100%);
-  width: 90vmin;
-  margin-botton: 20vh;
+  width: 100vmin;
+  height: 100vmin;
 }
 
 /*=================================================
@@ -102,10 +105,9 @@ We prevent text selection with "user-select".
 .ui {
   grid-row: 1;
   grid-column: 1;
-  width: 100%;
-  height: 100%;
   display: grid;
   user-select: none;
+  height: 100svh;
 }
 
 
@@ -140,7 +142,7 @@ Let's also align their text to the center.
 
 /*=================================================
 
-Our game title font and margin dimensions.
+Our game title font size and margin dimensions.
 
 =================================================*/
 
@@ -152,7 +154,7 @@ Our game title font and margin dimensions.
 /*=================================================
 
 Now we configure our label texts.
-Setting 'display: block' will assure it will take
+Setting "display: block" will assure it will take
 the full rown and push down the next element.
 
 Learn a but more  about the display property here:
@@ -210,7 +212,6 @@ And put a nice round border around it.
 .ui button {
   font-size: 4vmin;
   padding: 3vmin;
-  background: transparent;
   border: solid 2px white;
   border-radius: 2vmin;
   background: #100010;
@@ -264,8 +265,7 @@ interactive.
 /*=================================================
 
 Let's use grid again to to keep mobile buttons
-close to the fingers but away from the mobile
-default bottom button.
+close to the fingers .
 
 =================================================*/
 
@@ -273,7 +273,7 @@ default bottom button.
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: repeat(3, 1fr);
-  padding: 0 2vmin 18vh;
+  padding: 0 2vmin 6vh;
   align-items: end;
   column-gap: 2vw;
   justify-items: center;
@@ -362,10 +362,9 @@ set it to have no pointer events.
 
 .screenEffect {
   pointer-events: none;
-  grid-row: 1;
-  grid-column: 1;
+  position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
 }
 
 /*=================================================

@@ -128,8 +128,8 @@ back to the ui.
 
 /*================================================
 
-Now we attach events to each one of our control 
-buttons. They will also work for touch devices.
+Now we attach mouse events to each one of our 
+control buttons.
 
 =================================================*/
     
@@ -139,7 +139,6 @@ buttons. They will also work for touch devices.
         player.actionInput[event.target.name] = true;
       };
       
-      control.addEventListener('touchstart', press);
       control.addEventListener('mousedown', press);
 
       var release = function (event) {
@@ -147,10 +146,61 @@ buttons. They will also work for touch devices.
       };
       
       control.addEventListener('mouseup', release);
-      control.addEventListener('touchend', release);
+      control.addEventListener('mouseleave', release);
      
     }); /* close ui.mobileControls loop */
 
+/*================================================
+
+Since touch input can have multiple targets at the
+same time, we need to loop over all targets.
+
+=================================================*/
+    
+    const touchEvent = function (event) {
+
+/*================================================
+
+First we consider none of them are being touched.
+
+=================================================*/
+      
+      loop(ui.mobileControls, function (control) {
+        player.actionInput[control.name] = false;
+      });
+
+/*================================================
+
+Then we check what elements are being touched.
+https://developer.mozilla.org/en-US/docs/Web/API/Document/elementFromPoint
+
+=================================================*/
+      
+      loop(event.touches, function (touch) {
+        
+        var touched = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+/*================================================
+
+We only turn on the touched elements that we can 
+find in the mobile controls list.
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in
+
+=================================================*/
+        
+        if (touched.name in ui.mobileControls) {
+          player.actionInput[touched.name] = true;
+        }
+        
+      }); /* close event.touches loop */
+      
+    }; /* close touch event */
+    
+    addEventListener('touchstart', touchEvent);
+    addEventListener('touchmove', touchEvent);
+    addEventListener('touchend', touchEvent);
+    addEventListener('touchcancel', touchEvent);
+    
   }, /* close ui.start function */
    
 /*================================================
