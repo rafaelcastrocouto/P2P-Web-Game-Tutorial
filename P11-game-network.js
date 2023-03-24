@@ -32,7 +32,7 @@ channel id.
 We save the methods we will need to use later.
 
 =================================================*/
-    
+
     network.on = net.on;
     network.broadcast = net.broadcast;
     network.numberOfPlayers = net.numberOfPlayers;
@@ -242,7 +242,7 @@ All set to initialize our game network.
 =================================================*/
     
     
-    if (window['Net4web']) network.start();
+    if (window['net4web']) network.start();
     
 /*================================================
 
