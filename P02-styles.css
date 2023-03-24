@@ -213,6 +213,7 @@ And put a nice round border around it.
   background: transparent;
   border: solid 2px white;
   border-radius: 2vmin;
+  background: #100010;
   transition: background 0.2s;
 }
 
@@ -231,7 +232,7 @@ https://www.w3.org/WAI/WCAG21/Techniques/
 .ui button:hover,
 .ui button:focus,
 .ui button:disabled {
-  background: rgba(255,255,255,0.3)
+  background: #213;
 }
 
 /*=================================================
