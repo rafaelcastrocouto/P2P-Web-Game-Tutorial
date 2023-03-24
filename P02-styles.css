@@ -59,9 +59,12 @@ rendered on screen, the container element.
 Inside the container we have our "canvas.screen" 
 and the user interface. We want them to be rendered
 on top of each other, to achieve this we will
-use the grid  property.
+use the grid property.
 Read more about it in this useful article:
 https://css-tricks.com/snippets/css/complete-guide-grid/
+
+Let's add some extra brightness to balance the
+TV effect black lines.
 
 =================================================*/
 
