@@ -137,7 +137,6 @@ buttons. They will also work for touch devices.
       
       var press = function (event) {
         player.actionInput[event.target.name] = true;
-       // network.broadcast({ input: player.actionInput });
       };
       
       control.addEventListener('touchstart', press);
@@ -145,7 +144,6 @@ buttons. They will also work for touch devices.
 
       var release = function (event) {
         player.actionInput[event.target.name] = false;
-       // network.broadcast({ input: player.actionInput });
       };
       
       control.addEventListener('mouseup', release);
@@ -160,36 +158,29 @@ buttons. They will also work for touch devices.
 Now let's create a way for our user to leave 
 the edit screen and start playing.
 
-First we need toggle the menus.
-
 =================================================*/
 
   toggle: function (state) {
     
-    ui.menus.shipMenu.classList.toggle('hidden');
-    ui.menus.mobileMenu.classList.toggle('hidden');
-
-/*================================================
-
-We also need to broadcast the player data to
-share it with our peers.
-
-=================================================*/
-  
     player.actionInput.editing = state;
 
 /*================================================
 
+First we need toggle the menus.
+
+=================================================*/
+    
+    ui.menus.shipMenu.classList.toggle('hidden');
+    ui.menus.mobileMenu.classList.toggle('hidden'); 
+
+/*================================================
+
 If we start to play and there are no asteroids
-in our list we build and broadcast them.
+in our list we must build them.
 
 =================================================*/    
 
     if (state == false && asteroids.list.length == 0) {
-
-      if (game.numberOfPlayers() == 1) {
-        player.inChargeOfAstroids = true;
-      }
       
       if (player.inChargeOfAstroids) {
         asteroids.list = asteroids.build();

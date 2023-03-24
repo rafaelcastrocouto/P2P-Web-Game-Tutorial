@@ -164,9 +164,9 @@ players list and call the draw ship function.
 
 =================================================*/
 
-  allShips: function(playerList) {
+  allShips: function(list) {
     
-    loop(game.playerList, function (p) {
+    loop(list, function (p) {
       
 /*=================================================
 
@@ -175,10 +175,22 @@ draw their ship as well.
 
 =================================================*/
         
-      if (!p.actionInput.editing) playerDraw.ship(p);
+      if (!p.actionInput.editing) {
+        playerDraw.ship(p);
+      }
 
-    }) /* close game.playerList loop */
+    }) /* close list loop */
 
+/*=================================================
+
+We can't forget to draw our own ship.
+
+=================================================*/
+    
+    if (!player.actionInput.editing) {
+      playerDraw.ship(player);
+    }
+    
   } /* close playerDraw.allShips function */
   
 }; /* close playerDraw global var */

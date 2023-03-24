@@ -17,64 +17,56 @@ var network = {
 
 /*================================================
 
-Start web4 network, it will create one id for us.
-   
+We start web4 network, with our bot token and the
+channel id. 
+
 =================================================*/
 
-    var net = net4web({ 
-      debug: 0,
+    var net = net4web({
       channelId: '01GVQDK26HWZQ8KKJ78C1AMWVY',
       token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK'
     });
 
-    net.on('ready', function (event) {
+/*================================================
+
+We save the methods we will need to use later.
+
+=================================================*/
+    
+    network.on = net.on;
+    network.broadcast = net.broadcast;
+    network.numberOfPlayers = net.numberOfPlayers;
+    
+/*================================================
+
+When our connection is ready the library will 
+create one id for us.
+
+=================================================*/
+    
+    network.on('ready', function (event) {
 
       player.id = event.detail.id;
 
 /*================================================
 
-We are going to use the login date to control
-who's in charge of the asteroids.
+We are going save the login date to be able to 
+check who's in charge of the asteroids.
 
 =================================================*/
-      
-      player.loginDate = new Date().valueOf();
+
+      player.loginDate = event.detail.loginDate;
       
 /*================================================
 
-Now that we have an id and a date value we can add
-our own data to the game player list and turn on
-the play button.
+Now that we have an id and a date value we can
+turn on the play button.
 
 =================================================*/
-    
-      game.playerList[player.id] = player;
+
       ui.toggleButtons.play.disabled = false;
       
     }); /* close network ready event listener */
-
-/*================================================
-
-The join event will fire when a new player joins 
-the game and will allow us to send data over the
-peer connection.
-
-=================================================*/
-
-    net.on('connection', function (event) {
-
-      var connection = event.detail.connection;
-
-/*================================================
-
-We save the connection to the network list in 
-order to reuse it later.
-
-=================================================*/ 
-      
-      network.list[event.detail.id] = connection;
-      
-    }); /* close netowrk connection event listener */
     
 /*================================================
 
@@ -83,10 +75,10 @@ updated asteroids list or a bullet hit.
 
 =================================================*/
     
-    net.on("data", function (event) {
-      
-      var data = event.detail.data;
+    network.on("data", function (event) {
 
+      var data = event.detail.content.data;
+      
 /*================================================
 
 If we receive new player data we add them to the
@@ -96,17 +88,8 @@ list and keep track of the connection date.
       
       if (data.player) {
         
-        game.playerList[data.id] = data.player;
-        game.playerList[data.id].lastDate = new Date().valueOf();
-
-/*================================================
-
-Now we check who is the oldest player, that's the
-one in charge.
-
-=================================================*/
-
-        network.inChargeCheck();
+        network.list[data.id] = data.player;
+        network.list[data.id].lastDate = new Date().valueOf();
         
       } /* close if data.player condition */
 
@@ -143,24 +126,6 @@ asteroids if when we are in charge of them.
     }); /* close network data event listener */
     
   }, /* close network.start function */
-
-/*================================================
-
-Our broadcast function just need to add our id
-and send the data to all our peers.
-A simple loop will do the trick.
-
-=================================================*/
-  
-  broadcast: function (data) {
-    
-    data.id = player.id;
-    
-    loop(network.list, function (connection) {
-      connection.send(data);
-    });
-    
-  }, /* close network.broadcast function */
   
 /*================================================
 
@@ -171,17 +136,71 @@ asteroids position.
 =================================================*/
   
   inChargeCheck: function () {
+
+/*================================================
+
+Let's be sure we won't make a disconnected player
+in charge of the asteroids.
+
+=================================================*/
     
-    var playerInCharge = player;
-    loop(game.playerList, function (p) {
-      if (p.loginDate < player.loginDate) {
-        playerInCharge = p;
+    network.disconnectCheck();
+    
+/*================================================
+
+If there's no one else we must be in charge.
+
+=================================================*/
+    
+    if (network.numberOfPlayers() == 1) {
+      player.inChargeOfAstroids = true;
+    } 
+
+/*================================================
+
+We loop over the list to see who's the oldest
+player, they will be the one in charge. 
+
+=================================================*/
+    
+    else {
+      var playerInCharge = player;
+      loop(network.list, function (p) {
+        if (p.loginDate < player.loginDate) {
+          playerInCharge = p;
+        }
+      });
+      
+/*================================================
+
+We finally check if we are in charge.
+
+=================================================*/
+      
+      var inCharge = (player == playerInCharge);
+      player.inChargeOfAstroids = inCharge;
+      
+    }
+    
+  }, /* close network.inChargeCheck function */
+
+/*================================================
+
+If we don't receive data from a player for more
+than seconds we remove them from the list. We also
+have to update who's in charge of the asteroids.
+
+=================================================*/
+  
+  disconnectCheck: function () {
+    
+    loop(network.list, function (p) {
+      if (new Date().valueOf() - p.lastDate > 2000) {
+        delete network.list[p.id];
       }
-    });
-    var isInCharge = (player == playerInCharge);
-    player.inChargeOfAstroids = isInCharge;
-    
-  } /* close network.inChargeCheck function */
+    }); /* game.playerList loop  */
+
+  } /* close network.disconnectCheck function */
   
 }; /* close network global var */
 
@@ -195,23 +214,6 @@ and the main game loop.
 =================================================*/
 
 var game = {
-
-  playerList: {},
-
-/*================================================
-
-Since JavaScript will provide us with a length
-property for objects we need to create a function
-to return the number of players.
-We just can use the list of keys in the object,
-it's an array so we can just return it's length.
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-
-=================================================*/
-  
-  numberOfPlayers: function () {
-    return Object.keys(game.playerList).length;
-  },
 
 /*================================================
 
@@ -240,7 +242,7 @@ All set to initialize our game network.
 =================================================*/
     
     
-    if (window['net4web']) network.start();
+    if (window['Net4web']) network.start();
     
 /*================================================
 
@@ -251,8 +253,8 @@ create an id and add the single player to the list.
 =================================================*/
 
     else {
+      
       player.id = 'singleplayer';
-      game.playerList[player.id] = player;
 
 /*================================================
 
@@ -319,6 +321,8 @@ inside our map limits.
 
 =================================================*/
 
+    network.inChargeCheck();
+    
     if (player.inChargeOfAstroids) {
       
       loop(asteroids.list, function(a, asteroidIndex) {
@@ -356,7 +360,7 @@ is not editing the ship.
     
     if (!player.actionInput.editing) {
       worldDraw.allAsteroids();
-      playerDraw.allShips();
+      playerDraw.allShips(network.list);
     }
     
     tvEffect();
@@ -387,21 +391,6 @@ we calculate their movement, turning and shots.
     if (!player.actionInput.editing) {
       game.framePhysics();
     }
-
-/*================================================
-
-If we don't receive data from a player for more
-than seconds we remove them from the list. We also
-have to update who's in charge of the asteroids.
-
-=================================================*/
-    
-    loop(game.playerList, function (p) {
-      if (new Date().valueOf() - p.lastDate > 2000) {
-        delete game.playerList[p.id];
-        network.inChargeCheck();
-      }
-    }); /* game.playerList loop  */
     
 /*================================================
 

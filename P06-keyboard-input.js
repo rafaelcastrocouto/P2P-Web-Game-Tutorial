@@ -60,15 +60,6 @@ pressedKeys value to true.
         
         player.actionInput[pressAction] = true;
 
-/*================================================
-
-And now send the event to our peers with the key 
-state set to true.
-
-=================================================*/
-
-       // network.broadcast({ input: player.actionInput });
-
       }  /* close if pressAction condition */
 
 /*================================================
@@ -97,7 +88,6 @@ event, but our state will now be false;
       
       if (pressAction) {
         player.actionInput[pressAction] = false;
-       // network.broadcast({ input: player.actionInput });
       }
       
     });/* close keyup event listener */

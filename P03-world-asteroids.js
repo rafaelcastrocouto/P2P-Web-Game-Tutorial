@@ -414,7 +414,8 @@ smaller asteroids!
        
        if (player.inChargeOfAstroids) {
          asteroids.spawnSmallAsteroids(a);
-
+       }
+       
 /*================================================
 
 When the player is not in charge we just tell 
@@ -422,7 +423,7 @@ everyone that we were able to hit.
 
 =================================================*/
          
-       } else {
+       else {
          network.broadcast({hit: a});
        }
        
