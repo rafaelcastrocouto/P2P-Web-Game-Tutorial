@@ -3,35 +3,7 @@
 PART 03: Building our world
 
 Now the first thing we are going to to is build our
-asteroids.
-
-We need some values for the big asteroids and
-also for the small ones. Feel free to play around
-with this values and check the result in game.
-
-=================================================*/
-
-var bigAsteroid = {
-  speed: 0.1, /* maximum speed */
-  size:  1.5, /* minimum radius */
-  delta: 0.8  /* size variation */
-};
-
-/*================================================
-
-Our small asteroids will have the same structure
-as the big ones, but you guessed, their speed will
-be bigger and their radius will be smaller!
-
-=================================================*/
-
-var smallAsteroid = {
-  speed: 0.2,
-  size: 0.5,
-  delta: 0.5
-};
-
-/*================================================
+world and asteroids data.
 
 To keep our world data well organized, let's
 also store all the values in a single object.
@@ -59,6 +31,33 @@ move them to the opposite side.
     if (a.y > world.height) a.y = 0;
   },
     
+};
+
+/*================================================
+We need some values for the big asteroids and
+also for the small ones. Feel free to play around
+with this values and check the result in game.
+
+=================================================*/
+
+var bigAsteroid = {
+  speed: 0.1, /* maximum speed */
+  size:  1.5, /* minimum radius */
+  delta: 0.8  /* size variation */
+};
+
+/*================================================
+
+Our small asteroids will have the same structure
+as the big ones, but you guessed, their speed will
+be bigger and their radius will be smaller!
+
+=================================================*/
+
+var smallAsteroid = {
+  speed: 0.2,
+  size: 0.5,
+  delta: 0.5
 };
 
 /*================================================
@@ -130,9 +129,9 @@ we have finished creating the asteroid.
 /*================================================
 
 To make it easier to loop over all our lists 
-let's make a function can handle number ranges, 
-arrays and objects. 
-Learn more about how to use the for loop here:
+let's make a function can handle loops for 
+number ranges, arrays, touchLists and objects. 
+Learn more about how to use the for loops here:
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
 
 =================================================*/
@@ -213,7 +212,7 @@ that will do just that.
 
 =================================================*/
 
-  build: function () {
+  buildAll: function () {
 
 /*================================================
 
@@ -254,7 +253,7 @@ return our array full of asteroids.
 
     return array;
 
-  }, /* close asteroids.build function */
+  }, /* close asteroids.buildAll function */
 
 /*================================================
 
@@ -350,12 +349,12 @@ we can be sure that they are colliding.
 /*================================================
 
 The collide function we just implemented will make
-a collision check. When it happens we are goin to
-fire a hit event.
+a collision check. When this collision happens we 
+are going to fire an asteroid hit event.
 
 =================================================*/
   
-  hit: function (a, asteroidIndex, bulletIndex) {
+  hit: function (a, asteroidIndex) {
 
 /*================================================
 
@@ -367,47 +366,25 @@ Let's start with some audio effect: BOOM!!!
     
 /*================================================
 
-If we are in charge of the astroids we also need
-to update the asteroids list and need to remove 
+We also need to update the asteroids list and need to remove 
 the big asteroid.
 
 =================================================*/      
     
-    if (player.inChargeOfAstroids) {
-      asteroids.list.splice(asteroidIndex, 1);
+    asteroids.list.splice(asteroidIndex, 1);
     
-  /*================================================
-  
-  If the asteroid is big enough we spawn two 
-  smaller asteroids!
-  
-  When the player is not in charge we just tell 
-  everyone that we were able to hit.
-  
-  =================================================*/
-    
-      if (a.r > 0.9) {
-        asteroids.spawnSmallAsteroids(a);
-      }
-      
-    } /* close if inChargeOfAstroids condition */
-
 /*================================================
 
 If the asteroid is big enough we spawn two 
 smaller asteroids!
 
-When the player is not in charge we just tell 
-everyone that we were able to hit.
-
 =================================================*/
-
-    else {
-      network.hit({asteroid: a, asteroidIndex});
+    
+    if (a.r > 0.9) {
+      asteroids.spawnSmallAsteroids(a);
     }
     
   }, /* close asteroids.hit function */
-
   
 /*================================================
 

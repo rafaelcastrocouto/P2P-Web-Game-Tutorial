@@ -72,8 +72,8 @@ h for height, a for angle, and so on...
 
   ship: {
     
-    x: Math.random() * world.width,
-    y: Math.random() * world.height,
+    x: /*Math.random() **/ world.width,
+    y: /*Math.random() **/ world.height,
     w: 1.2,        /* width */
     h: 1.5,        /* height */
 

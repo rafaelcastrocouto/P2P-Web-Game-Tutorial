@@ -27,6 +27,8 @@ channel id.
       token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK'
     });
 
+    window.net = net
+
 /*================================================
 
 We save the methods we will need to use later.
@@ -44,7 +46,8 @@ Lastly we attach our network events.
 =================================================*/
     
     network.on('ready', network.ready);
-    network.on("data", network.data);
+    network.on('data', network.data);
+    network.on('left', network.left);
     
   }, /* close network.start function */
 
@@ -57,7 +60,7 @@ date to check who's in charge of the asteroids.
 =================================================*/
   
   ready: function (event) {
-    
+
     player.id = event.detail.id;
     player.loginDate = event.detail.loginDate;
     
@@ -81,9 +84,8 @@ updated asteroids list or a bullet hit.
   
   data: function (event) {
 
-    var id = event.detail.id;
     var data = event.detail.content.data;
-    
+
 /*================================================
 
 If we receive new player data we add them to the
@@ -92,7 +94,7 @@ network player list.
 =================================================*/
     
     if (data.player) {
-      network.list[id] = data.player;
+      network.list[event.detail.id] = data.player;
     }
 
 /*================================================
@@ -117,16 +119,6 @@ asteroid and spawn two smaller ones.
       var asteroid = data.hit.asteroid;
       var index = data.hit.asteroid.asteroidIndex;
       asteroids.hit(asteroid, index);
-    }
-
-/*================================================
-
-Lastly we keep track of the connection date.
-
-=================================================*/
-
-    if (network.list[id]) {
-      network.list[id].lastDate = event.detail.content.date;
     }
     
   }, /* close network.data function */
@@ -154,19 +146,11 @@ asteroids position.
 =================================================*/
   
   inChargeCheck: function () {
-
-/*================================================
-
-Let's be sure we won't make a disconnected player
-in charge of the asteroids.
-
-=================================================*/
-    
-    network.disconnectCheck();
     
 /*================================================
 
-If there's no one else we must be in charge.
+If there's player is in single player mode or if 
+there's no one else, we must be in charge.
 
 =================================================*/
     
@@ -199,7 +183,6 @@ We finally check if we are in charge.
 =================================================*/
       
       var inCharge = (player == playerInCharge);
-      console.log(inCharge)
       player.inChargeOfAstroids = inCharge;
       
     }
@@ -208,39 +191,16 @@ We finally check if we are in charge.
 
 /*================================================
 
-If we don't receive data from a player for more
-than seconds we remove them from the list. We also
-have to update who's in charge of the asteroids.
-
-The Date object will return it's value as an 
-integral number in milliseconds:
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-
-=================================================*/
-  
-  disconnectCheck: function () {
-    
-    loop(network.list, function (p) {
-      
-      var now = new Date().valueOf();
-      
-      if (now - p.lastDate > 2000) {
-
-/*================================================
-
-The delete operator, as you might imagine, removes 
-a property from an object:
+When a player leaves we just need to remove them
+from the list. The delete operator, as you might 
+imagine, removes a property from an object:
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
 
 =================================================*/
-        
-        delete network.list[p.id];
-        
-      } /* close if old lastDate condition */
-      
-    }); /* close networklist loop */
-
-  } /* close network.disconnectCheck function */
+  
+  left: function (event) {
+    delete network.list[event.detail.id];
+  }
   
 }; /* close network global var */
 
@@ -337,12 +297,11 @@ asteroids and players positions.
   
   We also need to check if our bullets are hitting.
   We need to use our collide function to check each
-  asteroid on our list against a each bullet.
+  asteroid on our list against each bullet.
   
   =================================================*/
     
     loop(asteroids.list, function(a, asteroidIndex) {
-      
       loop(player.bullets, function(b, bulletIndex) {
 
 /*================================================
@@ -352,13 +311,28 @@ asteroids hit function.
 
 =================================================*/ 
         
-        if (asteroids.collide(a, b)) { 
+        if (asteroids.collide(a, b)) {
+          
           player.bullets.splice(bulletIndex, 1);
-          asteroids.hit(a, asteroidIndex);
-        };
+          
+          if (player.inChargeOfAstroids) {
+            asteroids.hit(a, asteroidIndex);
+          }
+
+/*================================================
+
+When the player is not in charge we just tell 
+everyone that we were able to hit.
+
+=================================================*/
+            
+          else {
+            network.hit({asteroid: a, asteroidIndex});
+          }
+          
+        } /* close if asteroids.collide condition */
     
       }); /* close player.bullets loop  */
-      
     }); /* close asteroids.list loop  */  
     
 /*================================================
@@ -378,7 +352,7 @@ If there are no asteroids we must build them.
 =================================================*/    
 
       if (asteroids.list.length == 0) {
-        asteroids.list = asteroids.build();
+        asteroids.list = asteroids.buildAll();
       }
       
       loop(asteroids.list, function(a, asteroidIndex) {
