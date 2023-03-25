@@ -1,6 +1,6 @@
 /*=================================================
 
-PART 4: Calculating player physics
+PART 04: Calculating player physics
 
 This is the most important file in our game from
 the player's perspective. Here we will calculate 
@@ -72,29 +72,30 @@ h for height, a for angle, and so on...
 
   ship: {
     
-    x: world.width / 2,  /* position x */
-    y: world.height / 2, /* position y */
-    w: 1.2, h: 1.5,      /* width and height */
+    x: Math.random() * world.width,
+    y: Math.random() * world.height,
+    w: 1.2,        /* width */
+    h: 1.5,        /* height */
 
-                  /* Attack: */
+                   /* Attack: */
     
-    maxDelay: 65, /* maximum delay between shots */
-    delay: 0,     /* current delay */
+    maxDelay: 65,  /* maximum delay between shots */
+    delay: 0,      /* current delay */
 
-                 /* Speed: */
+                   /* Speed: */
     
-    v: 0,         /* current speed */
-    vx: 0, vy: 0, /* velocities (x,y) */
-    max: 0.01,    /* maximum speed */
+    v: 0,          /* current speed */
+    vx: 0, vy: 0,  /* velocities (x,y) */
+    max: 0.01,     /* maximum speed */
     motor: 0.0005, /* acceleration force */
     brake: 0.996,  /* speed reduction */
 
-                  /* Control: */
+                   /* Control: */
     
-    a: 0,         /* current angle */
-    va: 0,        /* current turning speed */
-    turn: 0.02,  /* turning force */ 
-    momento: 0.8, /* rotation reduction */
+    a: 0,          /* current angle */
+    va: 0,         /* current turning speed */
+    turn: 0.02,    /* turning force */ 
+    momento: 0.8,  /* rotation reduction */
 
   } /* close player.ship object */
 
@@ -483,7 +484,7 @@ physics and player management in one file.
 Take a break, drink some water and eat a cake,
 you deserve it!
 
-After you are done head to "P05-user-interface.js"
+After you are done head to "P05-user-input.js"
 
 =================================================*/
 

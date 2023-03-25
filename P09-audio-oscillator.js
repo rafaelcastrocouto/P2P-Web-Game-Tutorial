@@ -1,6 +1,6 @@
 /*=================================================
 
-PART 10: Sound effects
+PART 09: Oscillator sound effects
 
 In this lesson we are going to make the audio
 effects of our game. Check more about web audio
@@ -131,7 +131,7 @@ addEventListener('keydown', audio.start);
 
 /*=================================================
 
-That's all! Next lesson "P11-game-loop.js" is the 
+That's all! Next lesson "P10-game-network.js" is the 
 last one. Keep going, you are almost there!
 
 =================================================*/

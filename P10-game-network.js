@@ -5,7 +5,7 @@ PART 10: Network, frame loop and game start
 This is our last lesson, we are going to begin
 making our game network logic. Don't worry, our
 library will handle all the heavy lifting. 
-We just need to make a list and some events.
+We just need to make a list and add some events.
 
 =================================================*/
 
@@ -51,23 +51,14 @@ Lastly we attach our network events.
 /*================================================
 
 When our connection is ready the library will 
-create one id for us.
+create one id for us. We also save the login 
+date to check who's in charge of the asteroids.
 
 =================================================*/
   
   ready: function (event) {
-
-    network.ready = true;
     
     player.id = event.detail.id;
-
-/*================================================
-
-We are going save the login date to be able to 
-check who's in charge of the asteroids.
-
-=================================================*/
-
     player.loginDate = event.detail.loginDate;
     
 /*================================================
@@ -80,7 +71,7 @@ turn on the play button.
     ui.toggleButtons.play.disabled = false;
     
   }, /* close network.ready function */
-
+  
 /*================================================
 
 When we receive data it can be a new player data,
@@ -92,15 +83,6 @@ updated asteroids list or a bullet hit.
 
     var id = event.detail.id;
     var data = event.detail.content.data;
-    
-/*================================================
-
-First we keep track of the connection date.
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-
-=================================================*/
-    
-    network.list[id].lastDate = new Date().valueOf();
     
 /*================================================
 
@@ -126,17 +108,43 @@ asteroids list when we are not in charge of them.
 
 /*================================================
 
-If we receive bullet hit data, we spawn smaller
-asteroids if when we are in charge of them.
+If we receive bullet hit data, we remove the 
+asteroid and spawn two smaller ones.
 
 =================================================*/
     
     if (data.hit && player.inChargeOfAstroids) {
-      asteroids.spawnSmallAsteroids(a);
+      var asteroid = data.hit.asteroid;
+      var index = data.hit.asteroid.asteroidIndex;
+      asteroids.hit(asteroid, index);
+    }
+
+/*================================================
+
+Lastly we keep track of the connection date.
+
+=================================================*/
+
+    if (network.list[id]) {
+      network.list[id].lastDate = event.detail.content.date;
     }
     
   }, /* close network.data function */
+  
+/*================================================
 
+When we hit an asteroid we broadcast it's position.
+
+=================================================*/
+  
+  hit: function (asteroid) {
+
+    if (network.broadcast) {
+      network.broadcast({hit: asteroid});
+    }
+  
+  },
+  
 /*================================================
 
 We need to check who is the player in charge, 
@@ -162,8 +170,11 @@ If there's no one else we must be in charge.
 
 =================================================*/
     
-    if (network.numberOfPlayers() == 1) {
+    if (player.id == 'singlePlayer' || 
+        network.numberOfPlayers() == 0) {
+      
       player.inChargeOfAstroids = true;
+      
     } 
 
 /*================================================
@@ -188,6 +199,7 @@ We finally check if we are in charge.
 =================================================*/
       
       var inCharge = (player == playerInCharge);
+      console.log(inCharge)
       player.inChargeOfAstroids = inCharge;
       
     }
@@ -200,15 +212,33 @@ If we don't receive data from a player for more
 than seconds we remove them from the list. We also
 have to update who's in charge of the asteroids.
 
+The Date object will return it's value as an 
+integral number in milliseconds:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+
 =================================================*/
   
   disconnectCheck: function () {
     
     loop(network.list, function (p) {
-      if (new Date().valueOf() - p.lastDate > 2000) {
+      
+      var now = new Date().valueOf();
+      
+      if (now - p.lastDate > 2000) {
+
+/*================================================
+
+The delete operator, as you might imagine, removes 
+a property from an object:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
+
+=================================================*/
+        
         delete network.list[p.id];
-      }
-    });
+        
+      } /* close if old lastDate condition */
+      
+    }); /* close networklist loop */
 
   } /* close network.disconnectCheck function */
   
@@ -226,13 +256,14 @@ var game = {
 
 /*================================================
 
-Now let's create our game start function and 
-create our starfield.
+Now let's create our game start function. First we 
+start the TV effect and build our starfield.
 
 =================================================*/
   
   start: function () {
 
+    tvEffect.start();
     worldDraw.buildStars();
     
 /*================================================
@@ -263,7 +294,6 @@ create an id and add the single player to the list.
     else {
       
       player.id = 'singlePlayer';
-
       player.inChargeOfAstroids = true;
 
 /*================================================
@@ -274,7 +304,7 @@ We also need to enable the play button.
       
       ui.toggleButtons.play.disabled = false;
       
-    } /* close else singleplayer condition */
+    } /* close else singlePlayer condition */
     
 /*================================================
 
@@ -294,14 +324,14 @@ asteroids and players positions.
 
 =================================================*/
   
-  framePhysics: function () {
+  physicsFrame: function () {
     
-    playerPhysics.move();
-    playerPhysics.turn();
-    playerPhysics.shoot();
-    playerPhysics.bullets();
-
-    if (network.ready) network.broadcast({player});
+    if (!player.actionInput.editing) {
+      playerPhysics.move();
+      playerPhysics.turn();
+      playerPhysics.shoot();
+      playerPhysics.bullets();
+    }
     
   /*================================================
   
@@ -315,8 +345,16 @@ asteroids and players positions.
       
       loop(player.bullets, function(b, bulletIndex) {
 
-        if (asteroids.collide(a, b)) {
-          asteroids.hit(a, asteroidIndex, bulletIndex);
+/*================================================
+
+If they collide we remove the bullet and run our
+asteroids hit function.
+
+=================================================*/ 
+        
+        if (asteroids.collide(a, b)) { 
+          player.bullets.splice(bulletIndex, 1);
+          asteroids.hit(a, asteroidIndex);
         };
     
       }); /* close player.bullets loop  */
@@ -333,20 +371,26 @@ our asteroids are inside our map limits.
     
     if (player.inChargeOfAstroids) {
       
+ /*================================================
+
+If there are no asteroids we must build them.
+
+=================================================*/    
+
+      if (asteroids.list.length == 0) {
+        asteroids.list = asteroids.build();
+      }
+      
       loop(asteroids.list, function(a, asteroidIndex) {
         
         asteroids.move(a);
         world.limit(a);   
   
       }); /* close asteroid.list loop  */
-
-      if (network.ready) {
-        network.broadcast({asteroids: asteroids.list});
-      }
       
     } /* close if player.inChargeOfAstroids condition */
     
-  }, /* close game.framePhysics function */
+  }, /* close game.physicsFrame function */
   
 /*================================================
 
@@ -356,26 +400,33 @@ and draw all stars, asteroids and players ships.
 
 =================================================*/
   
-  frameDraw: function () {
+  drawFrame: function () {
+    
     draw.clear();
     draw.moveCamera();
     worldDraw.allStars();
+    worldDraw.allAsteroids();
     
 /*=================================================
 
-We only draw the ships and asteroids if the player 
-is not editing the ship.
+We only draw the players ships if the user is not 
+editing his own ship.
 
 =================================================*/
     
     if (!player.actionInput.editing) {
-      worldDraw.allAsteroids();
       playerDraw.allShips(network.list);
     }
     
-    tvEffect();
+/*=================================================
+
+And lastly we update the TV effect
+
+=================================================*/
     
-  },  /* close game.frameDraw function */
+    tvEffect.draw();
+    
+  },  /* close game.drawFrame function */
 
 /*================================================
 
@@ -388,7 +439,7 @@ First the check if we are in charge.
   
   frameProcess: function () {
     
-    if (network.ready) network.inChargeCheck();
+    network.inChargeCheck();
       
 /*================================================
 
@@ -397,9 +448,25 @@ we calculate their movement, turning and shots.
 
 =================================================*/
     
-    if (!player.actionInput.editing) {
-      game.framePhysics();
+    game.physicsFrame();
+
+/*================================================
+
+Now we broadcast all information we calculated to
+our friends.
+
+=================================================*/
+    
+    if (network.broadcast) {
+      
+      network.broadcast({player});
+      
+      if (player.inChargeOfAstroids) {
+        network.broadcast({asteroids: asteroids.list});
+      }
+      
     }
+
     
 /*================================================
 
@@ -407,7 +474,7 @@ Then we draw everything with our draw function.
 
 =================================================*/
 
-    game.frameDraw();
+    game.drawFrame();
 
 /*================================================
 

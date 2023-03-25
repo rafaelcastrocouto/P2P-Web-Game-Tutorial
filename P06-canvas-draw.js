@@ -1,6 +1,6 @@
 /*================================================
 
-PART 7: Drawing on the canvas
+PART 06: Drawing on the canvas
 
 It's time to draw our ships and asteroids on 
 the screen with the canvas API. 
@@ -179,14 +179,14 @@ all this camera details and move forward.
 If you are still with me, let's dig in.
 First we need a camera object with a few values.
 
-The position on the middle of the world, the
+The position on top of the player ship, the
 rotation poiting down (angle in radians) and
 the lens XY values for pan and Z for zoom.
 
 =================================================*/
   
   camera: {
-    position: { x: world.width / 2, y: world.height / 2, z: 8 },
+    position: { x: player.ship.x, y: player.ship.y, z: 10 },
     rotation: { x: -Math.PI, y: 0, z: 0 },
     lens: { x: canvas.width / 2, y: canvas.height / 2, z: 100 }
   },
@@ -352,7 +352,6 @@ on the middle of our screen.
 =================================================*/
 
   moveCamera: function () {
-
     var c = draw.camera;
     
 /*=================================================
@@ -489,12 +488,10 @@ all our canvas screen with the clearRect method.
 /*================================================
 
 That was the longest lesson, if you made this far
-you the next ones will be easy.
+you the next ones will be easy. Next we are going 
+to use this functions to draw a parallax starfield.
 
-Next we are going to use this functions to draw a 
-parallax starfield.
-
-What are you waiting for? Go to "P08-world-stars.js"
+What are you waiting for? Go to "P07-tv-stars.js"
 
 =================================================*/
 

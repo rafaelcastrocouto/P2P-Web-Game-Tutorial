@@ -1,6 +1,6 @@
 /*=================================================
 
-PART 9: Drawing the player ship
+PART 08: Drawing the ship
 
 In this lesson we are just going to draw our ships.
 
@@ -197,8 +197,8 @@ We can't forget to draw our own ship.
 
 /*=================================================
 
-Next lesson is "P10-audio-oscillator.js". 
-Let's make some noise!
+Next lesson is "P09-audio-oscillator.js". 
+Let's make some noise!!!
 
 =================================================*/
 

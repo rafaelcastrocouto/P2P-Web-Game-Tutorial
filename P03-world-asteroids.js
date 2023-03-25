@@ -1,6 +1,6 @@
 /*=================================================
 
-PART 3: Building our world
+PART 03: Building our world
 
 Now the first thing we are going to to is build our
 asteroids.
@@ -367,69 +367,45 @@ Let's start with some audio effect: BOOM!!!
     
 /*================================================
 
-First we delete the bullet by removing it from the
-player bullet list.
-
-=================================================*/  
-
-    player.bullets.splice(bulletIndex, 1);
-
-/*================================================
-
 If we are in charge of the astroids we also need
-to update the asteroids list.
+to update the asteroids list and need to remove 
+the big asteroid.
 
 =================================================*/      
     
     if (player.inChargeOfAstroids) {
-      
-/*================================================
-
-We also need to remove the asteroid.
-
-=================================================*/
-      
       asteroids.list.splice(asteroidIndex, 1);
-
-/*================================================
-
-If the list length is zero that means we have no
-asteroids so we build new ones.
-
-=================================================*/
-      
-      if (asteroids.list.length == 0) {
-        asteroids.list = asteroids.build();
+    
+  /*================================================
+  
+  If the asteroid is big enough we spawn two 
+  smaller asteroids!
+  
+  When the player is not in charge we just tell 
+  everyone that we were able to hit.
+  
+  =================================================*/
+    
+      if (a.r > 0.9) {
+        asteroids.spawnSmallAsteroids(a);
       }
       
-    } /* close if player.inChargeOfAstroids condition */
-    
+    } /* close if inChargeOfAstroids condition */
+
 /*================================================
 
 If the asteroid is big enough we spawn two 
 smaller asteroids!
 
-=================================================*/
-  
-     if (a.r > 0.9) {
-       
-       if (player.inChargeOfAstroids) {
-         asteroids.spawnSmallAsteroids(a);
-       }
-       
-/*================================================
-
 When the player is not in charge we just tell 
 everyone that we were able to hit.
 
 =================================================*/
-         
-       else if (network.ready) {
-         network.broadcast({hit: a});
-       }
-       
-     }  /* close if big asteroid condition */
-  
+
+    else {
+      network.hit({asteroid: a, asteroidIndex});
+    }
+    
   }, /* close asteroids.hit function */
 
   

@@ -1,6 +1,6 @@
 /*================================================
 
-PART 5: User interface sliders and buttons
+PART 05: Mouse, touch and keyboard input
 
 To make our user interface work we will create 
 three methods. Two of them will let the user
@@ -225,21 +225,6 @@ First we need toggle the menus.
 
 /*================================================
 
-If we start to play and there are no asteroids
-in our list we must build them.
-
-=================================================*/    
-
-    if (state == false && asteroids.list.length == 0) {
-      
-      if (player.inChargeOfAstroids) {
-        asteroids.list = asteroids.build();
-      }
-      
-    } /* close if no asteroids condition */
-
-/*================================================
-
 And lastly we add some audio to our button!
 
 =================================================*/    
@@ -342,10 +327,105 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
 /*================================================
 
-That's the end of our user interface lesson!
-Next we are going to learn how to respond to the
-user keyboard events. Go on and open our next
-lesson: "p10-client-keyboard"
+Let's create the functions that will be triggered
+when the user presses a keyboard button.
+
+But first we need to make a list of our valid keys
+that we are going to allow. Here's good resource 
+about keyboarb events for you to dig in:
+https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
 
 =================================================*/
+
+var keyboard = {
+
+  validPressKeys: {
+    'ArrowUp'   : 'up',
+    'KeyW'      : 'up',
+    'KeyM'      : 'up',
+    'ArrowLeft' : 'left',
+    'KeyA'      : 'left',
+    'Comma'     : 'left',
+    'ArrowRight': 'right',
+    'KeyD'      : 'right',
+    'Period'    : 'right',
+    'Space'     : 'shoot',
+    'KeyS'      : 'shoot',
+    'Slash'     : 'shoot'
+  },
+
+/*================================================
+
+Now let's start our event listeners.
+
+=================================================*/
+
+  start: function () {
+
+/*================================================
+
+When a user presses a key we check if it's listed
+in our valid press keys list.
+
+=================================================*/
+
+    addEventListener('keydown', function(event) {
+      var key = event.code;
+      
+      var pressAction = keyboard.validPressKeys[key];
+
+/*================================================
+
+If it is a valid press key, we set it's' 
+pressedKeys value to true.
+
+=================================================*/
+      
+      if (pressAction) {
+        
+        player.actionInput[pressAction] = true;
+
+      }  /* close if pressAction condition */
+
+/*================================================
+
+If the user presses E or escape we toggle the UI.
+
+=================================================*/
+      
+      if (key == 'KeyE' || key == 'KeyP') {
+        ui.toggle(!player.actionInput.editing);
+      }
+
+    });  /* close keydown event listener */
+
+/*================================================
+
+Now we will do the same thing with the "keyup"
+event, but our state will now be false;
+
+=================================================*/
+
+    addEventListener('keyup', function(event) {
+      
+      var key = event.code;
+      var pressAction = keyboard.validPressKeys[key];
+      
+      if (pressAction) {
+        player.actionInput[pressAction] = false;
+      }
+      
+    });/* close keyup event listener */
+
+  } /* close keyboard.start function */
+
+}; /* close keyboard global var */
+
+/*================================================
+
+And that's all for our user inputs. Let's 
+start drawing on lesson "P06-canvas-draw.js"
+
+=================================================*/
+
 
