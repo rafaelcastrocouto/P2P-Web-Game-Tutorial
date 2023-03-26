@@ -20,6 +20,7 @@ https://fonts.google.com/
   src: url(font/Silkscreen.woff2) format("woff2")
 }
 
+.ui a,
 .ui h1,
 .ui label,
 .ui button {
@@ -112,11 +113,24 @@ We prevent text selection with "user-select".
   grid-column: 1;
   display: grid;
   user-select: none;
+  width: 100vw;
   height: 100svh;
   position: relative;
   zoom: 1;
 }
 
+/*=================================================
+
+Our link will be always white and on the top left.
+
+=================================================*/
+
+.ui a {
+  color: white;
+  position: absolute;
+  font-size: 3.5vmin;
+  padding: 1vmin;
+}
 
 /*=================================================
 
