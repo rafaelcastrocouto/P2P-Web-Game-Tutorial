@@ -84,7 +84,7 @@ a division.
 =================================================*/
 
     var attackBonus = 1.2 + (p.attack/100);
-    var speedBonus = 0.1 + (p.speed/150);
+    var speedBonus = 0.15 + (p.speed/150);
 
 /*================================================
                   
@@ -141,6 +141,26 @@ And last we can draw all our ship lines.
     draw.lineMirrored(color, p1, p3, width);
     draw.lineMirrored(color, p4, p2, width);
     draw.lineMirrored(color, p4, p3, width);
+
+/*================================================
+
+To add some engine fire effect we can draw some 
+extra lines on the ship back.
+
+=================================================*/
+
+    if (player.actionInput.up) {
+      fire = (2 * speedBonus) + (0.8 * Math.random());
+    
+    var pfire = {
+      x: s.x - (fire * vertical.x),
+      y: s.y - (fire * vertical.y)
+    }
+    
+    draw.lineMirrored('#fff5', p2, pfire, width);
+    draw.lineMirrored('#fff5', p3, pfire, width);
+      
+    }
     
 /*================================================
 
