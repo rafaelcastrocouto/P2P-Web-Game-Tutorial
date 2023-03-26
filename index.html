@@ -275,21 +275,8 @@ after the play button is pressed.
 
       <div class="mobileMenu hidden">
         
-        <div>
-          <button name="up">Move</button>
 
-<!--==============================================
-
-Let's group up the movement buttons to make it
-easier to control their position.
-        
-==============================================-->
-          
-          <div class="mobileControls">
-            <button name="left"><</button>
-            <button name="right">></button>
-          </div>
-        </div>
+        <button name="up">Move</button>
 
 <!--==============================================
 
@@ -299,7 +286,29 @@ ship customization and to shoot.
 ==============================================-->
         
         <button name="edit">Edit</button>
-        <button name="shoot">Shoot</button>
+        
+<!--==============================================
+
+Let's group up the movement buttons to make it
+easier to control their position.
+        
+==============================================-->
+        
+        <div>
+          <div class="mobileControls">
+            <button name="left"><</button>
+            <button name="right">></button>
+          </div>
+        
+<!--==============================================
+
+And our last button will allow shooting.
+        
+==============================================-->
+          
+          <button name="shoot">Shoot</button>
+          
+        </div>
         
       </div> <!-- close div.mobileUI -->
         

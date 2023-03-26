@@ -84,7 +84,7 @@ a division.
 =================================================*/
 
     var attackBonus = 1.2 + (p.attack/100);
-    var speedBonus = 0.15 + (p.speed/150);
+    var speedBonus = 0.2 + (p.speed/150);
 
 /*================================================
                   
@@ -150,7 +150,7 @@ extra lines on the ship back.
 =================================================*/
 
     if (player.actionInput.up) {
-      fire = (2 * speedBonus) + (0.8 * Math.random());
+      fire = 1.5 * speedBonus + (speedBonus * Math.random());
     
     var pfire = {
       x: s.x - (fire * vertical.x),
