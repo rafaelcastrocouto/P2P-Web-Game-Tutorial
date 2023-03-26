@@ -216,12 +216,20 @@ the edit screen and start playing.
 
 /*================================================
 
-First we need toggle the menus.
+We need toggle the menus visibility.
 
 =================================================*/
     
     ui.menus.shipMenu.classList.toggle('hidden');
     ui.menus.mobileMenu.classList.toggle('hidden'); 
+
+/*================================================
+
+Stop the ship movement.
+
+=================================================*/   
+
+    player.ship.v = 0;
 
 /*================================================
 
@@ -332,7 +340,7 @@ when the user presses a keyboard button.
 
 But first we need to make a list of our valid keys
 that we are going to allow. Here's good resource 
-about keyboarb events for you to dig in:
+about keyboard events for you to dig in:
 https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
 
 =================================================*/
@@ -356,7 +364,7 @@ var keyboard = {
 
 /*================================================
 
-Now let's start our event listeners.
+Now let's start our keyboard event listeners.
 
 =================================================*/
 
