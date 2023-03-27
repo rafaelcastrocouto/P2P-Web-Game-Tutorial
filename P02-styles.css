@@ -121,7 +121,8 @@ We prevent text selection with "user-select".
 
 /*=================================================
 
-Our link will be always white and on the top left.
+Our github link will be white, always on the top 
+left and with no underline decoration.
 
 =================================================*/
 
@@ -129,7 +130,9 @@ Our link will be always white and on the top left.
   color: white;
   position: absolute;
   font-size: 4vmin;
+  margin: 5px;
   padding: 1vmin;
+  text-decoration: none;
 }
 
 /*=================================================
@@ -186,6 +189,7 @@ https://www.w3schools.com/cssref/pr_class_display.php
 .ui label {
   font-size: 3.5vmin;
   display: block;
+  margin-bottom: 0.5vmin;
 }
 
 /*=================================================
@@ -245,16 +249,24 @@ With the ":hover" pseudo selector we can add a
 lighter background when the button is focused or
 the mouse is over our button.
 
-Always be careful while changing the focus style
-and be sure not to break any accessibility rules
-https://www.w3.org/WAI/WCAG21/Techniques/
-
 =================================================*/
 
 .ui button:hover,
 .ui button:focus,
 .ui button:disabled {
   background: #213;
+}
+
+/*=================================================
+
+Always be careful while changing the focus style
+and be sure not to break any accessibility rules
+https://www.w3.org/WAI/WCAG21/Techniques/
+
+=================================================*/
+
+*:focus {
+  outline: 5px solid white;
 }
 
 /*=================================================
