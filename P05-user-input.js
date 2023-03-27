@@ -237,7 +237,7 @@ And lastly we add some audio to our button!
 
 =================================================*/    
 
-    audio.toggle();
+    if (audio.ctx) audio.toggle();
     
   }, /* close ui.toggle function */
 

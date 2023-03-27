@@ -314,7 +314,7 @@ Let's start with some nice shooting sound!
 
 =================================================*/
 
-      audio.shoot();
+      if (audio.ctx) audio.shoot();
       
 /*================================================
 

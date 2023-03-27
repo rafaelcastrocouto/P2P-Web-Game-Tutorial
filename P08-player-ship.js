@@ -149,7 +149,7 @@ extra lines on the ship back.
 
 =================================================*/
 
-    if (player.actionInput.up) {
+    if (p.actionInput.up) {
       fire = 1.5 * speedBonus + (speedBonus * Math.random());
     
     var pfire = {
@@ -184,9 +184,9 @@ players list and call the draw ship function.
 
 =================================================*/
 
-  allShips: function(list) {
+  allShips: function() {
     
-    loop(list, function (p) {
+    loop(network.list, function (p) {
       
 /*=================================================
 
@@ -199,7 +199,7 @@ draw their ship as well.
         playerDraw.ship(p);
       }
 
-    }) /* close list loop */
+    }) /* close network.list loop */
 
 /*=================================================
 

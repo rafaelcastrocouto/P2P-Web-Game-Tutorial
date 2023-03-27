@@ -128,7 +128,7 @@ Our link will be always white and on the top left.
 .ui a {
   color: white;
   position: absolute;
-  font-size: 3.5vmin;
+  font-size: 4vmin;
   padding: 1vmin;
 }
 

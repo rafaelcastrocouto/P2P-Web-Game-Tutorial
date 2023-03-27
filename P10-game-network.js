@@ -24,7 +24,8 @@ channel id.
 
     var net = net4web({
       channelId: '01GVQDK26HWZQ8KKJ78C1AMWVY',
-      token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK'
+      token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK',
+      cid: 'Qmcpv9jAV121vKSEQDPv6GDLbvYSD3ARPNHzZiq5DvKRCY'
     });
 
     window.net = net
@@ -116,9 +117,9 @@ asteroid and spawn two smaller ones.
 =================================================*/
     
     if (data.hit && player.inChargeOfAstroids) {
-      var asteroid = data.hit.asteroid;
-      var index = data.hit.asteroid.asteroidIndex;
-      asteroids.hit(asteroid, index);
+      var asteroidIndex = data.hit;
+      var asteroid = asteroids.list[asteroidIndex];
+      asteroids.hit(asteroid, asteroidIndex);
     }
     
   }, /* close network.data function */
@@ -129,10 +130,10 @@ When we hit an asteroid we broadcast it's position.
 
 =================================================*/
   
-  hit: function (asteroid) {
+  hit: function (asteroidIndex) {
 
     if (network.broadcast) {
-      network.broadcast({hit: asteroid});
+      network.broadcast({hit: asteroidIndex});
     }
   
   },
@@ -327,7 +328,7 @@ everyone that we were able to hit.
 =================================================*/
             
           else {
-            network.hit({asteroid: a, asteroidIndex});
+            network.hit(asteroidIndex);
           }
           
         } /* close if asteroids.collide condition */
@@ -370,7 +371,8 @@ If there are no asteroids we must build them.
 
 The frame draw method will clear the canvas,
 move the camera to the player ship position,
-and draw all stars, asteroids and players ships.
+and draw all stars, asteroids, players ships
+and the TV effect.
 
 =================================================*/
   
@@ -380,24 +382,7 @@ and draw all stars, asteroids and players ships.
     draw.moveCamera();
     worldDraw.allStars();
     worldDraw.allAsteroids();
-    
-/*=================================================
-
-We only draw the players ships if the user is not 
-editing his own ship.
-
-=================================================*/
-    
-    if (!player.actionInput.editing) {
-      playerDraw.allShips(network.list);
-    }
-    
-/*=================================================
-
-And lastly we update the TV effect
-
-=================================================*/
-    
+    playerDraw.allShips();
     tvEffect.draw();
     
   },  /* close game.drawFrame function */
