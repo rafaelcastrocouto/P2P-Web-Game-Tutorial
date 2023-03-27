@@ -117,7 +117,7 @@ asteroid and spawn two smaller ones.
 =================================================*/
     
     if (data.hit && player.inChargeOfAstroids) {
-      var asteroidIndex = data.hit;
+      var asteroidIndex = data.hit.index;
       var asteroid = asteroids.list[asteroidIndex];
       asteroids.hit(asteroid, asteroidIndex);
     }
@@ -328,7 +328,7 @@ everyone that we were able to hit.
 =================================================*/
             
           else {
-            network.hit(asteroidIndex);
+            network.hit({index: asteroidIndex});
           }
           
         } /* close if asteroids.collide condition */
