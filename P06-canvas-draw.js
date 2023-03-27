@@ -28,6 +28,24 @@ canvas.height = 256;
 
 /*================================================
 
+We need a camera object with a few values.
+
+The position on top of the player ship, the
+rotation poiting down (angle in radians) and
+the lens XY values for pan and Z for zoom.
+
+=================================================*/
+
+var cameraOffset = 5;
+
+var camera = {
+  position: { x: player.ship.x, y: player.ship.y - cameraOffset, z: 10 },
+  rotation: { x: -Math.PI * 0.9, y: 0, z: 0 },
+  lens: { x: canvas.width / 2, y: canvas.height / 2, z: 120 }
+};
+
+/*================================================
+
 Now let's create our "draw" global variable to
 hold our beautyful art.
 
@@ -63,7 +81,8 @@ With our color function we can now create a
 function to draw a single colored line. 
 First we project each point to our camera 
 then we use the canvas API to stroke our line. 
-Let's also set a default line width of 1 pixel.
+We will only draw the line if the points are
+inside out screen space.
 
 =================================================*/
 
@@ -74,20 +93,36 @@ Let's also set a default line width of 1 pixel.
 
 /*================================================
 
+To avoid clipping ships on the edge of the screen
+we use an offset value.
+
+=================================================*/
+
+    var o = 25;
+    var inScreen = function (p) {
+      return (p.x > -o && p.x < canvas.width  + o && 
+              p.y > -o && p.y < canvas.height + o);
+    };
+
+/*================================================
+
 We want all our lines ends to be rounded so let's 
 set the line cap value to round.
 https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap
 
 =================================================*/
 
-    ctx.lineCap = "round";    
-    ctx.lineWidth = width;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(s.x, s.y);
-    ctx.lineTo(e.x, e.y);
-    ctx.stroke();
-    ctx.closePath();
+    if (inScreen(s) && inScreen(e)){
+    
+      ctx.lineCap = "round";    
+      ctx.lineWidth = width;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(e.x, e.y);
+      ctx.stroke();
+      ctx.closePath();
+    }
     
   }, /* close draw.line function */
 
@@ -123,15 +158,16 @@ Not let's calculate the radius projection.
 And let's use the canvas API to draw an full arc.
 
 =================================================*/
-
-    ctx.lineWidth = width;
-    ctx.fillStyle = fill;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
-    ctx.stroke();
-    ctx.fill();
-    ctx.closePath();
+    if (c.r >= 0) {
+      ctx.lineWidth = width;
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    }
     
   }, /* close draw.circle function */
 
@@ -177,29 +213,12 @@ But if you think that's too much math, just skip
 all this camera details and move forward.
 
 If you are still with me, let's dig in.
-First we need a camera object with a few values.
-
-The position on top of the player ship, the
-rotation poiting down (angle in radians) and
-the lens XY values for pan and Z for zoom.
-
-=================================================*/
-  
-  camera: {
-    position: { x: player.ship.x, y: player.ship.y, z: 10 },
-    rotation: { x: -Math.PI, y: 0, z: 0 },
-    lens: { x: canvas.width / 2, y: canvas.height / 2, z: 100 }
-  },
-
-/*================================================
-
-Now let's break the project function down.
 I'll store the camera for brevity.
 
 =================================================*/
 
   projectToCamera: function (p) {
-    var c = draw.camera;
+    var c = camera;
 
 /*================================================
 
@@ -216,7 +235,11 @@ First we pre-store our camera rotation cosines
 to avoid recalculating them.
 
 =================================================*/
-
+    var sin = {
+      x: Math.sin(c.rotation.x),
+      y: Math.sin(c.rotation.y),
+      z: Math.sin(c.rotation.z),
+    };
     var cos = {
       x: Math.cos(c.rotation.x),
       y: Math.cos(c.rotation.y),
@@ -249,38 +272,21 @@ If you think you already are too deep then just
 try to keep this image in your mind:
 https://en.wikipedia.org/wiki/File:EulerProjections.svg
 
-We will first multiply each XY distance
-by the cosine of the Z axis camera rotation.
-Since our camera rotation is locked pointing 
-down to the XY plane with no Z rotation, 
-this cosine value is always equal to one,
-so it won't change anything.
-
-Then we scale our distance X by the cosine 
-of the Y rotation. This is also always 
-equal to one, meaning no changes are made 
-to our X distances.
-
-Next we scale the Y valuethe X axis cosine.
-Since we rotated our camera around the X axis
-by 90 degrees, this value will be minus one.
-So our Y distances sign will be inverted, top 
-becomes bottom and bottom becomes top.
-
 =================================================*/
 
+    var szx = sin.z*a.x,
+        szy = sin.z*a.y,
+        czx = cos.z*a.x,
+        cyz = cos.y*a.z,
+        czx = cos.z*a.x,
+        czy = cos.z*a.y,
+        szyczx = szy+czx,
+        czyszx = czy-szx;
+        
     var d = {
-      x: a.x * cos.z * cos.y,
-      y: a.y * cos.z * cos.x,
-
-/*================================================
-
-Now we can scale the Z distance. It will also
-change it's sign because of the X cosine.
-
-=================================================*/
-
-      z: a.z * cos.x * cos.y
+      x: (cos.y*(szyczx))-(sin.y*a.z),
+      y: (sin.x*(cyz+(sin.y*(szyczx)))+(cos.x*(czyszx))),
+      z: (cos.x*(cyz+(sin.y*(szyczx)))-(sin.x*(czyszx))),
     };
 
 /*================================================
@@ -352,7 +358,6 @@ on the middle of our screen.
 =================================================*/
 
   moveCamera: function () {
-    var c = draw.camera;
     
 /*=================================================
 
@@ -363,8 +368,8 @@ of the screen while playing.
 =================================================*/
     
     if (!player.actionInput.editing) {
-      c.position.x = player.ship.x;
-      c.position.y = player.ship.y;
+      camera.position.x = player.ship.x;
+      camera.position.y = player.ship.y - cameraOffset;
     } 
       
 /*=================================================
@@ -375,8 +380,8 @@ to the left.
 =================================================*/
       
     else {
-      c.position.x += 0.05;
-      world.limit(c.position);
+      camera.position.x += 0.05;
+      world.limit(camera.position);
     }
 
   }, /* close draw player function */
