@@ -217,8 +217,45 @@ We can't forget to draw our own ship.
 
 /*=================================================
 
+Now let's make the high scores list, first we 
+select out list.
+
+=================================================*/
+
+var highScores = {
+
+  list: document.querySelector('.highScores'),
+  
+/*=================================================
+
+The update function will sort all the players by 
+score then loop over the player list to fill in the 
+label's text content.
+
+=================================================*/
+  
+  update: function () {
+
+    var allPlayers = [player, ...Object.values(network.list)];
+    allPlayers.sort(function (a, b) { return b.score - a.score });
+
+    loop(highScores.list.children, function(item, index){
+      if (allPlayers[index]) {
+        var p = allPlayers[index];
+        var score = p.score;
+        item.textContent = 'Player'+(index + 1)+': '+score;
+        item.style.color = draw.color(p);
+      }
+    });
+  }
+  
+};
+
+/*=================================================
+
 Next lesson is "P09-audio-oscillator.js". 
 Let's make some noise!!!
 
 =================================================*/
+
 

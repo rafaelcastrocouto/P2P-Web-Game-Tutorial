@@ -24,8 +24,7 @@ channel id.
 
     var net = net4web({
       channelId: '01GVQDK26HWZQ8KKJ78C1AMWVY',
-      token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK',
-      cid: 'Qmcpv9jAV121vKSEQDPv6GDLbvYSD3ARPNHzZiq5DvKRCY'
+      token: 'PGo5TJg0NwsPy03UjV-S8V9r5NfDJQiri6oYqcvh_eitIvOu9_Sx3DP1F1hS50hK'
     });
 
     window.net = net
@@ -307,13 +306,14 @@ asteroids and players positions.
 
 /*================================================
 
-If they collide we remove the bullet and run our
-asteroids hit function.
+If they collide we add a point to the player score,
+remove the bullet and run our asteroids hit function.
 
 =================================================*/ 
         
         if (asteroids.collide(a, b)) {
-          
+
+          player.score += 1;
           player.bullets.splice(bulletIndex, 1);
           
           if (player.inChargeOfAstroids) {
@@ -434,6 +434,8 @@ Then we draw everything with our draw function.
 =================================================*/
 
     game.drawFrame();
+
+    highScores.update();
 
 /*================================================
 

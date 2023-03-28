@@ -28,8 +28,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduct
 
 /*================================================
 
-We need to select the shipMenu container and the 
-mobileMenu container.
+We need to select the shi menu and the inGame menu.
 
 Let's get them with the "querySelector" method.
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
@@ -38,7 +37,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
    
     ui.menus = {
       shipMenu: document.querySelector('.shipMenu'),
-      mobileMenu: document.querySelector('.mobileMenu')
+      inGameMenu: document.querySelector('.inGameMenu')
     }
     
 /*================================================
@@ -221,7 +220,7 @@ We need toggle the menus visibility.
 =================================================*/
     
     ui.menus.shipMenu.classList.toggle('hidden');
-    ui.menus.mobileMenu.classList.toggle('hidden'); 
+    ui.menus.inGameMenu.classList.toggle('hidden'); 
 
 /*================================================
 

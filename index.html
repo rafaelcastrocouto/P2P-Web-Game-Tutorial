@@ -211,7 +211,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
 <!--==============================================
 
 We will build two interfaces for thew user, the
-ship sliders. and the mobile controls.
+ship sliders. and the in-game controls.
 
 Let's start with the ship user interface menu. 
 We will also put them all inside a <div>
@@ -276,58 +276,83 @@ We are going make it work with JavasCript.
 
 <!--==============================================
 
-The next menu will allow users to play on mobile
-devices by tounching or by clicking with the mouse. 
-This menu will start hidden and only appear 
+The next menu will start hidden and only appear 
 after the play button is pressed.
 
 ==============================================-->
 
-      <div class="mobileMenu hidden">
-        
+          <div class="inGameMenu hidden">
 
-        <button name="up">Move</button>
+<!--==============================================
 
+Our player scores will be a have just three labels.
+
+==============================================-->
+            
+            <div class="highScores">
+              <label></label>
+              <label></label>
+              <label></label>
+            </div>
+            
+<!--==============================================
+
+The next inputs will allow users to play on mobile
+devices by tounching or by clicking with the mouse. 
+
+==============================================-->
+
+            <div class="mobileControls">
+              
+              <button name="up">Move</button>
+      
 <!--==============================================
 
 Our last buttons will allow player to edit their
 ship customization and to shoot.
         
 ==============================================-->
-        
-        <button name="edit">Edit</button>
-        
+          
+              <button name="edit">Edit</button>
+          
 <!--==============================================
 
-Let's group up the movement buttons to make it
-easier to control their position.
+The third column will hold the turn buttons and
+the shoot button, so let's group them.
+Let's also group up the movement buttons to make 
+it easier to control their position.
         
 ==============================================-->
-        
-        <div>
-          <div class="mobileControls">
-            <button name="left"><</button>
-            <button name="right">></button>
-          </div>
-        
+            
+              <div class="column3">
+                
+                <div class="turnControls">
+                  
+                  <button name="left"><</button>
+                  <button name="right">></button>
+                  
+                </div> <!-- close div.turnControls -->
+          
 <!--==============================================
 
 And our last button will allow shooting.
         
 ==============================================-->
-          
-          <button name="shoot">Shoot</button>
-          
-        </div>
-        
-      </div> <!-- close div.mobileUI -->
+            
+              <button name="shoot">Shoot</button>
         
 <!--==============================================
 
 That's all of our game user interface structure, 
-let's not forget to close their div element.
+let's not forget to close all div elements.
 
 ==============================================-->
+                
+            </div> <!-- close div.column3 -->
+            
+          </div> <!-- close div.mobileControls -->
+            
+        </div> <!-- close div.inGameMenu -->
 
       </div>  <!-- close div.ui -->
         

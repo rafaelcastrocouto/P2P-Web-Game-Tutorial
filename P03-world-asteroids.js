@@ -136,12 +136,13 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
 
 =================================================*/
 
-var loop = function (startOrArrayOrObject, endOrCallback, callback) {
+var loop = function (first, second, third) {
 
-  if (startOrArrayOrObject.constructor.name == 'Number') {
+  if (first.constructor.name == 'Number') {
     
-    var start = startOrArrayOrObject;
-    var end = endOrCallback;
+    var start = first;
+    var end = second;
+    var callback = third;
     
     for (var index=start; index < end; index++) {
       callback(index);
@@ -149,11 +150,12 @@ var loop = function (startOrArrayOrObject, endOrCallback, callback) {
     
   } /* close if start is number condition */
     
-  if (startOrArrayOrObject.constructor.name == 'Array' ||
-      startOrArrayOrObject.constructor.name == 'TouchList') {
+  if (first.constructor.name == 'Array' ||
+      first.constructor.name == 'HTMLCollection' ||
+      first.constructor.name == 'TouchList') {
     
-    var array = startOrArrayOrObject;
-    var callback = endOrCallback;
+    var array = first;
+    var callback = second;
     
     for (var index=0; index < array.length; index++) {
       var item = array[index];
@@ -171,10 +173,10 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
 
 =================================================*/
   
-  if (startOrArrayOrObject.constructor.name == 'Object') {
+  if (first.constructor.name == 'Object') {
     
-    var object = startOrArrayOrObject;
-    var callback = endOrCallback;
+    var object = first;
+    var callback = second;
     
     for (var key in object) {
       var item = object[key];

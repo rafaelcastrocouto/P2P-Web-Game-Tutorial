@@ -188,8 +188,8 @@ https://www.w3schools.com/cssref/pr_class_display.php
 
 .ui label {
   font-size: 3.5vmin;
-  display: block;
   margin-bottom: 0.5vmin;
+  display: block;
 }
 
 /*=================================================
@@ -295,21 +295,32 @@ interactive.
   cursor: default;
 }
 
+.ui .highScores {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.ui .highScores label {
+  font-size: 3vmin;
+}
+
 /*=================================================
 
 Let's use grid again to to keep mobile buttons
-close to the fingers .
+close to the fingers.
 
 =================================================*/
 
-.ui .mobileMenu {
+.ui .mobileControls {
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: repeat(3, 1fr);
-  padding: 0 2vmin 6vh;
+  margin: 0 2vmin;
   align-items: end;
   column-gap: 2vw;
   justify-items: center;
+  height: 90svh;
 }
 
 /*=================================================
@@ -319,7 +330,7 @@ in order for them to properly fit the screen.
 
 =================================================*/
 
-.ui .mobileMenu button {
+.ui .mobileControls button {
   margin: 2vmin 0 0;
 }
 
@@ -330,7 +341,7 @@ children of the mobileMenu.
 
 =================================================*/
 
-.ui .mobileMenu > * {
+.ui .mobileControls > * {
   max-width: 200px;
   width: 30vw;
 }
@@ -355,7 +366,7 @@ by side with a small gap between.
 
 =================================================*/
 
-.ui .mobileControls {
+.ui .turnControls {
   display: grid;
   grid-auto-flow: column;
   grid-gap: 2vmin;
@@ -368,7 +379,7 @@ first letter underline text decoration.
 
 =================================================*/
 
-.ui .mobileControls button:first-letter {
+.ui .turnControls button:first-letter {
   text-decoration: none;
 }
 
@@ -398,6 +409,8 @@ set it to have no pointer events.
   width: 100vw;
   height: 100svh;
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 3;
 }
 

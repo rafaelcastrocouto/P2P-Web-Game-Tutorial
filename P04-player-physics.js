@@ -97,7 +97,9 @@ h for height, a for angle, and so on...
     turn: 0.02,    /* turning force */ 
     momento: 0.8,  /* rotation reduction */
 
-  } /* close player.ship object */
+  }, /* close player.ship object */
+
+  score: 0
 
 }; /* close player global var */
 
