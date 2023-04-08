@@ -152,10 +152,16 @@ We will use the fillRect canvas context method to
 draw our 1px horizontal black lines.
 https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
 
+To be sure we will draw our lines with 1px height
+in all devices we use devicePixelRatio:
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
+
 =================================================*/
+
+      var p1 = devicePixelRatio || 1;
       
       loop(0, innerHeight / 2, function (i) {
-        tvEffect.ctx.fillRect(0, i * 2, canvas.width, 1);
+        tvEffect.ctx.fillRect(0, i * 2 * p1, canvas.width, p1);
       }); 
       
     } /* close if change innerHeight condition */

@@ -269,11 +269,13 @@ We also need to enable the play button.
 /*================================================
 
 And the last thing to do is initialize our game 
-loop with it's first single call.
+loop with it's first call to start the the physics 
+and network process loop and the draw frame loop.
 
 =================================================*/
     
-    game.frameProcess();
+    game.processFrame();
+    game.drawFrame();
     
   }, /* close game.start function */
 
@@ -366,26 +368,6 @@ If there are no asteroids we must build them.
     } /* close if player.inChargeOfAstroids condition */
     
   }, /* close game.physicsFrame function */
-  
-/*================================================
-
-The frame draw method will clear the canvas,
-move the camera to the player ship position,
-and draw all stars, asteroids, players ships
-and the TV effect.
-
-=================================================*/
-  
-  drawFrame: function () {
-    
-    draw.clear();
-    draw.moveCamera();
-    worldDraw.allStars();
-    worldDraw.allAsteroids();
-    playerDraw.allShips();
-    tvEffect.draw();
-    
-  },  /* close game.drawFrame function */
 
 /*================================================
 
@@ -396,7 +378,7 @@ First the check if we are in charge.
 
 =================================================*/
   
-  frameProcess: function () {
+  processFrame: function () {
     
     network.inChargeCheck();
       
@@ -426,15 +408,35 @@ our friends.
       
     }
 
-    
 /*================================================
 
-Then we draw everything with our draw function.
+Then it will call itself again with 60 frames per 
+second, something arounf 16.6 milliseconds.
+https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 
 =================================================*/
+    
+    setTimeout(game.processFrame, 1000/60);
+    
+  }, /* close game.frameProcess function */
 
-    game.drawFrame();
+/*================================================
 
+The frame draw method will clear the canvas,
+move the camera to the player ship position,
+and draw all stars, asteroids, players ships,
+the TV effect and update the score.
+
+=================================================*/
+  
+  drawFrame: function () {
+    
+    draw.clear();
+    draw.moveCamera();
+    worldDraw.allStars();
+    worldDraw.allAsteroids();
+    playerDraw.allShips();
+    tvEffect.draw();   
     highScores.update();
 
 /*================================================
@@ -443,11 +445,11 @@ Then it will call itself again in the next repaint
 with the requestAnimationFrame method.
 https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 
-=================================================*/    
+=================================================*/
     
-    requestAnimationFrame(game.frameProcess);
+    requestAnimationFrame(game.drawFrame);
     
-  } /* close game.frameProcess function */
+  }  /* close game.drawFrame function */
   
 }; /* close game global var */
 
