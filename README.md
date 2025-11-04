@@ -8,4 +8,4 @@ Just follow each file and have fun!
 
 All information is in the code comments so you can **learn while coding**. 
 
-Just go ahead and start here [index.html](https://github.com/rafaelcastrocouto/P2P-Web-Game-Tutorial/blob/main/index.html)
+Just go ahead and start here P01: [index.html](https://github.com/rafaelcastrocouto/P2P-Web-Game-Tutorial/blob/gh-pages/index.html)
