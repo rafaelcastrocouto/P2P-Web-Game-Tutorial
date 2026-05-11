@@ -2,7 +2,59 @@
 
 PART 07: Drawing stars and TV effect
 
-In this lesson we will build our starfiled, 
+In this lesson, to achieve that old TV screen effect let's 
+just draw vertical lines (1px height rectangles) 
+over everything with another canvas.
+
+=================================================*/
+
+var tvEffect = {
+
+  canvas: document.querySelector('.screenEffect'),
+
+  start: function () {
+    
+    tvEffect.ctx = tvEffect.canvas.getContext('2d');
+    tvEffect.ctx.fillStyle = 'black';
+    
+/*=================================================
+
+We just need 1px width and our CSS style will
+scale the canvas horizontally. Setting the height
+to zero will force our loop to update the height.
+
+=================================================*/
+    
+    tvEffect.canvas.width = 1;
+    tvEffect.canvas.height = 256 * 2;
+
+/*=================================================
+
+The innerHeight property tells us the height of the 
+window in pixels.
+https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
+
+We just need to loop half of the height since we
+will have one black line and one transparent line.
+This math is not hard at all, is it? 1+1=2
+
+We will use the fillRect canvas context method to
+draw our 1px horizontal black lines.
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
+
+=================================================*/
+    
+    loop(0, innerHeight/2, function (i) {
+      tvEffect.ctx.fillRect(0, i * 2, canvas.width, 1);
+    }); 
+  
+  } /* close tvEffect.start function */
+  
+}; /* close tvEffect global var */
+
+/*=================================================
+
+Now we are gonna build our starfiled, 
 so lest's start choosing the number of
 starts in our sky.
 
@@ -105,57 +157,6 @@ our colors and line widths.
   }
 
 }; /* close worldDraw global var */
-
-/*=================================================
-
-To achieve that old TV screen effect let's just
-draw 1px height rectangles with another canvas.
-
-=================================================*/
-
-var tvEffect = {
-
-  canvas: document.querySelector('.screenEffect'),
-
-  start: function () {
-    
-    tvEffect.ctx = tvEffect.canvas.getContext('2d');
-    tvEffect.ctx.fillStyle = 'black';
-/*=================================================
-
-We just need 1px width and our CSS style will
-scale the canvas horizontally. Setting the height
-to zero will force our loop to update the height.
-
-=================================================*/
-    
-    tvEffect.canvas.width = 1;
-    tvEffect.canvas.height = 256 * 2;
-
-/*=================================================
-
-The innerHeight property tells us the height of the 
-window in pixels.
-https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
-
-We just need to loop half of the height since we
-will have one black line and one transparent line.
-This math is not hard at all, is it? 1+1=2
-
-We will use the fillRect canvas context method to
-draw our 1px horizontal black lines.
-https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
-
-=================================================*/
-
-    
-    loop(0, innerHeight/2, function (i) {
-      tvEffect.ctx.fillRect(0, i * 2, canvas.width, 1);
-    }); 
-  
-  } /* close tvEffect.start function */
-  
-}; /* close tvEffect global var */
 
 /*=================================================
 

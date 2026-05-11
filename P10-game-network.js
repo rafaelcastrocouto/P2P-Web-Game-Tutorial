@@ -49,7 +49,7 @@ Lastly we attach our network events.
     network.on('data', network.data);
     network.on('left', network.left);
 
-    setTimeout( network.ready, 2000);
+    setTimeout(network.ready, 2000);
   }, /* close network.start function */
 
 /*================================================
@@ -61,10 +61,12 @@ date to check who's in charge of the asteroids.
 =================================================*/
   
   ready: function (event) {
-
-    player.id = event.detail.id;
-    player.loginDate = event.detail.loginDate;
     
+    if (event) {
+      player.id = event.detail.id;
+      player.loginDate = event.detail.loginDate;
+    }
+      
 /*================================================
 
 Now that we have an id and a date value we can

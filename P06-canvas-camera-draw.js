@@ -41,7 +41,7 @@ var cameraOffset = 2;
 var camera = {
   position: { x:  (world.width / 2), y:  (world.height / 2) - cameraOffset, z: 6 },
   rotation: { x: -Math.PI * 0.99, y: 0, z: 0 },
-  lens: { x: canvas.width / 2, y: canvas.height / 2, z: 120 }
+  lens: { x: canvas.width / 2, y: canvas.height / 2, z: 110 }
 };
 
 /*================================================

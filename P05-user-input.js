@@ -199,6 +199,41 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in
     addEventListener('touchmove', touchEvent);
     addEventListener('touchend', touchEvent);
     addEventListener('touchcancel', touchEvent);
+
+/*================================================
+
+Let's use our library to handle gamepad inputs
+https://github.com/alvaromontoro/gamecontroller.js
+
+=================================================*/    
+    gameControl.on('connect', function(gp) {
+      for (let x = 0; x < Math.min(17, gp.buttons); x++) {
+        gp.on('button' + x, function() {
+          if (x == 4 || x == 12) player.actionInput['up'] = true;
+          if (x == 14) player.actionInput['left'] = true;
+          if (x == 15) player.actionInput['right'] = true;
+          if (x == 0 || x == 2 || x == 5 ) player.actionInput['shoot'] = true;
+        });
+        gp.after('button' + x, function() {
+          if (x == 4 || x == 12) player.actionInput['up'] = false;
+          if (x == 14) player.actionInput['left'] = false;
+          if (x == 15) player.actionInput['right'] = false;
+          if (x == 0 || x == 2 || x == 5 ) player.actionInput['shoot'] = false;
+        });
+      }
+      for (let x = 0; x < Math.min(2, gp.axes); x++) {
+        const directions = ['up', 'right', 'left'];
+        for (let d = 0; d < directions.length; d++) {
+          gp.on(directions[d] + x, function() {
+            player.actionInput[directions[d]] = true;
+          });
+          gp.after(directions[d] + x, function() {
+            player.actionInput[directions[d]] = false;
+          });
+        }
+      }
+    });
+    
     
   }, /* close ui.start function */
    
