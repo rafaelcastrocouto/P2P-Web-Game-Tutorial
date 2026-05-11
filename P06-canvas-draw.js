@@ -23,8 +23,8 @@ the browser will calculate for the canvas.
 
 =================================================*/
 
-canvas.width = 256;
-canvas.height = 256; 
+canvas.width = 512;
+canvas.height = 512; 
 
 /*================================================
 
@@ -36,11 +36,11 @@ the lens XY values for pan and Z for zoom.
 
 =================================================*/
 
-var cameraOffset = 5;
+var cameraOffset = 2;
 
 var camera = {
-  position: { x: player.ship.x, y: player.ship.y - cameraOffset, z: 10 },
-  rotation: { x: -Math.PI * 0.9, y: 0, z: 0 },
+  position: { x:  (world.width / 2), y:  (world.height / 2) - cameraOffset, z: 6 },
+  rotation: { x: -Math.PI * 0.99, y: 0, z: 0 },
   lens: { x: canvas.width / 2, y: canvas.height / 2, z: 120 }
 };
 
@@ -77,6 +77,19 @@ we need to scale them.
   
 /*================================================
 
+To avoid clipping ships on the edge of the screen
+we use an offset value.
+
+=================================================*/
+
+inScreen: function (p) {
+    var o = 25;
+    return (p.x > -o && p.x < canvas.width  + o && 
+            p.y > -o && p.y < canvas.height + o);
+},
+  
+/*================================================
+
 With our color function we can now create a 
 function to draw a single colored line. 
 First we project each point to our camera 
@@ -90,20 +103,7 @@ inside out screen space.
     
     var s = draw.projectToCamera(start);
     var e = draw.projectToCamera(end);
-
-/*================================================
-
-To avoid clipping ships on the edge of the screen
-we use an offset value.
-
-=================================================*/
-
-    var o = 25;
-    var inScreen = function (p) {
-      return (p.x > -o && p.x < canvas.width  + o && 
-              p.y > -o && p.y < canvas.height + o);
-    };
-
+  
 /*================================================
 
 We want all our lines ends to be rounded so let's 
@@ -112,7 +112,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCa
 
 =================================================*/
 
-    if (inScreen(s) && inScreen(e)){
+    if (draw.inScreen(s) || draw.inScreen(e)){
     
       ctx.lineCap = "round";    
       ctx.lineWidth = width;
@@ -368,8 +368,11 @@ of the screen while playing.
 =================================================*/
     
     if (!player.actionInput.editing) {
-      camera.position.x = player.ship.x;
-      camera.position.y = player.ship.y - cameraOffset;
+      //camera.position.x = player.ship.x;
+      //camera.position.y = player.ship.y - cameraOffset;
+      camera.position.x = (world.height / 2);
+      camera.position.y = (world.width / 2) - cameraOffset;
+      //todo shake
     } 
       
 /*=================================================
@@ -461,7 +464,7 @@ on our ships. For brevity start = s and end = e
 
     draw.loopXY(function (x, y) {
       
-       var start = {
+      var start = {
         x: s.x+(x*world.width),
         y: s.y+(y*world.height),
         z: s.z

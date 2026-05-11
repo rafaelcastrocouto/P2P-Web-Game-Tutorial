@@ -48,7 +48,8 @@ Lastly we attach our network events.
     network.on('ready', network.ready);
     network.on('data', network.data);
     network.on('left', network.left);
-    
+
+    setTimeout( network.ready, 2000);
   }, /* close network.start function */
 
 /*================================================
@@ -436,7 +437,6 @@ the TV effect and update the score.
     worldDraw.allStars();
     worldDraw.allAsteroids();
     playerDraw.allShips();
-    tvEffect.draw();   
     highScores.update();
 
 /*================================================

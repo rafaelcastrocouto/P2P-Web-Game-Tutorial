@@ -72,8 +72,8 @@ h for height, a for angle, and so on...
 
   ship: {
     
-    x: /*Math.random() **/ world.width,
-    y: /*Math.random() **/ world.height,
+    x: /*Math.random() **/ world.width/2,
+    y: /*Math.random() **/ world.height/2,
     w: 1.2,        /* width */
     h: 1.5,        /* height */
 
@@ -451,7 +451,7 @@ keep the map limit and we are good to go.
       b.x += b.vx;
       b.y += b.vy;
 
-      world.limit(b);   
+      playerPhysics.limitBullet(b);   
       
 /*================================================
 
@@ -475,8 +475,24 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
     }); /* close player.bullets loop */
 
-  } /* close playerPhysics.bullets function */
+  }, /* close playerPhysics.bullets function */
   
+/*================================================
+
+We want our asteroids, ships and to stay in the world limits.
+If they reach the screen limit we are going to
+move them to the opposite side.
+
+=================================================*/
+
+  limitBullet: function (b) {
+    if ( (b.x < 0) || (b.x > world.width) || (b.y < 0) || (b.y > world.height) )
+        playerPhysics.deleteBullet(b);
+  }, /* close playerPhysics.limit function */
+
+  deleteBullet: function (b) {
+    player.bullets.splice(player.bullets.indexOf(b), 1);
+  }
 }; /* close playerPhysics global var */
 
 /*================================================

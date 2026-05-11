@@ -93,6 +93,12 @@ our colors and line widths.
   },
   
   allStars: function () {
+    // world limit
+    // draw.line('#444', {x:0,y:0,z:0}, {x:0,y:world.height,z:0});
+    // draw.line('#444', {x:0,y:0,z:0}, {x:world.width,y:0,z:0});
+    // draw.line('#444', {x:world.width,y:world.height,z:0}, {x:0,y:world.height,z:0});
+    // draw.line('#444', {x:world.width,y:world.height,z:0}, {x:world.width,y:0,z:0});
+    
     loop(world.starsList, function(s) {
       draw.dotMirrored('white', s, 4);
     });
@@ -124,25 +130,13 @@ to zero will force our loop to update the height.
 =================================================*/
     
     tvEffect.canvas.width = 1;
-    tvEffect.canvas.height = 0;
-    
-  }, /* close tvEffect.start function */
-  
-  draw: function () {
+    tvEffect.canvas.height = 256 * 2;
 
 /*=================================================
 
 The innerHeight property tells us the height of the 
 window in pixels.
 https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
-
-=================================================*/
-    
-    if (tvEffect.canvas.height != innerHeight) {
-      
-      tvEffect.canvas.height = innerHeight;
-
-/*=================================================
 
 We just need to loop half of the height since we
 will have one black line and one transparent line.
@@ -152,21 +146,14 @@ We will use the fillRect canvas context method to
 draw our 1px horizontal black lines.
 https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
 
-To be sure we will draw our lines with 1px height
-in all devices we use devicePixelRatio:
-// https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
-
 =================================================*/
 
-      var p1 = devicePixelRatio || 1;
-      
-      loop(0, innerHeight / 2, function (i) {
-        tvEffect.ctx.fillRect(0, i * 2 * p1, canvas.width, p1);
-      }); 
-      
-    } /* close if change innerHeight condition */
+    
+    loop(0, innerHeight/2, function (i) {
+      tvEffect.ctx.fillRect(0, i * 2, canvas.width, 1);
+    }); 
   
-  } /* close tvEffect.draw function */
+  } /* close tvEffect.start function */
   
 }; /* close tvEffect global var */
 
