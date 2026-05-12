@@ -205,35 +205,124 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in
 Let's use our library to handle gamepad inputs
 https://github.com/alvaromontoro/gamecontroller.js
 
-=================================================*/    
+=================================================*/   
+    
     gameControl.on('connect', function(gp) {
       for (let x = 0; x < Math.min(17, gp.buttons); x++) {
+
+/*================================================
+
+Before event runs only once when the button is pressed.
+
+=================================================*/ 
+        
+        gp.before('button' + x, function() {
+
+/*================================================
+
+Gamepad up and down will change the menu focus
+while customizing the ship.
+
+=================================================*/ 
+          
+          if (player.actionInput.editing) {
+            
+            const focusable = document.querySelectorAll('.shipMenu [name]');
+            const index = Array.prototype.indexOf.call(focusable, document.activeElement);
+            
+/*================================================
+
+If no element is focused let's just use the first one.
+
+=================================================*/ 
+            
+            let next = focusable[0];
+
+/*================================================
+
+If some element is focused we can select the next one
+or click if it's a button.
+
+=================================================*/ 
+            
+            if (index >= 0){
+              if (x == 12) next = focusable[index - 1];
+              if (x == 13) next = focusable[index + 1];
+              if (x == 0 || x == 2 || x ==  5) document.activeElement.click();
+            }
+            if (x == 12 || x == 13) next.focus();
+            
+          } /* close if player is editing condition */
+          
+/*================================================
+
+If game is ready, start button toggle ship edit.
+
+=================================================*/ 
+
+          if ((x == 8 || x == 9) && game.ready) ui.toggle(!player.actionInput.editing);
+          
+        }); /* close gp before button press function */
+        
+
         gp.on('button' + x, function() {
-          if (x == 4 || x == 12) player.actionInput['up'] = true;
-          if (x == 14) player.actionInput['left'] = true;
-          if (x == 15) player.actionInput['right'] = true;
-          if (x == 0 || x == 2 || x == 5 ) player.actionInput['shoot'] = true;
-        });
+          
+/*================================================
+
+Gamepad left and right will change the element 
+customation value.
+
+=================================================*/ 
+          
+          if (player.actionInput.editing) {
+            if (x == 14) document.activeElement.value = Number(document.activeElement.value) - 1;
+            if (x == 15) document.activeElement.value = Number(document.activeElement.value) + 1;
+            if (x == 14 || x == 15) ui.customize({target: document.activeElement});
+          }
+          
+/*================================================
+
+Gamepad buttons to control the ship in game.
+
+=================================================*/ 
+        
+          if (!player.actionInput.editing) {
+            if (x == 4 || x == 12) player.actionInput['up'] = true;
+            if (x == 14) player.actionInput['left'] = true;
+            if (x == 15) player.actionInput['right'] = true;
+            if (x == 0 || x == 2 || x == 5 ) player.actionInput['shoot'] = true;
+          }
+        }); /* close gp on button function */
+        
         gp.after('button' + x, function() {
-          if (x == 4 || x == 12) player.actionInput['up'] = false;
-          if (x == 14) player.actionInput['left'] = false;
-          if (x == 15) player.actionInput['right'] = false;
-          if (x == 0 || x == 2 || x == 5 ) player.actionInput['shoot'] = false;
+          if (!player.actionInput.editing) {
+            if (x == 4 || x == 12) player.actionInput['up'] = false;
+            if (x == 14) player.actionInput['left'] = false;
+            if (x == 15) player.actionInput['right'] = false;
+            if (x == 0 || x == 2 || x == 5 ) player.actionInput['shoot'] = false;
+          }
         });
-      }
+        
+      } /* close for all buttons loop */
+
+/*================================================
+
+Lastly let's add directional axis control.
+
+=================================================*/
+      
       for (let x = 0; x < Math.min(2, gp.axes); x++) {
         const directions = ['up', 'right', 'left'];
         for (let d = 0; d < directions.length; d++) {
           gp.on(directions[d] + x, function() {
-            player.actionInput[directions[d]] = true;
+            if (!player.actionInput.editing) player.actionInput[directions[d]] = true;
           });
           gp.after(directions[d] + x, function() {
-            player.actionInput[directions[d]] = false;
+            if (!player.actionInput.editing) player.actionInput[directions[d]] = false;
           });
         }
       }
-    });
-    
+    }); /* close gameControl function */
     
   }, /* close ui.start function */
    
@@ -254,8 +343,8 @@ We need toggle the menus visibility.
 
 =================================================*/
     
-    ui.menus.shipMenu.classList.toggle('hidden');
-    ui.menus.inGameMenu.classList.toggle('hidden'); 
+    ui.menus.shipMenu.classList.toggle('hidden', !state);
+    ui.menus.inGameMenu.classList.toggle('hidden', state); 
 
 /*================================================
 

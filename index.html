@@ -304,26 +304,16 @@ devices by tounching or by clicking with the mouse.
 
             <div class="mobileControls">
               
-              <button name="up">Move</button>
-      
-<!--==============================================
-
-Our last buttons will allow player to edit their
-ship customization and to shoot.
-        
-==============================================-->
-          
-              <button name="edit">Edit</button>
           
 <!--==============================================
 
-The third column will hold the turn buttons and
-the shoot button, so let's group them.
-Let's also group up the movement buttons to make 
-it easier to control their position.
+The bottom left will hold the movement buttons, 
+so let's group all of them.
+Let's also group up the left and right turn buttons 
+to make it easier to control their position.
         
 ==============================================-->
-            
+              
               <div class="column3">
                 
                 <div class="turnControls">
@@ -339,6 +329,18 @@ And our last button will allow shooting.
         
 ==============================================-->
             
+              <button name="up">Move</button>
+                
+            </div> <!-- close div.column3 -->
+              
+<!--==============================================
+
+Our last buttons will allow player to edit their
+ship customization and to shoot.
+        
+==============================================-->
+          
+              <button name="edit">Edit</button>
               <button name="shoot">Shoot</button>
         
 <!--==============================================
@@ -347,8 +349,6 @@ That's all of our game user interface structure,
 let's not forget to close all div elements.
 
 ==============================================-->
-                
-            </div> <!-- close div.column3 -->
             
           </div> <!-- close div.mobileControls -->
             
@@ -402,7 +402,7 @@ in the following lessons:
     <script src="P05-user-input.js"            type="text/javascript"></script>
     <script src="P06-canvas-camera-draw.js"    type="text/javascript"></script>
     <script src="P07-tv-stars.js"              type="text/javascript"></script>
-    <script src="P08-player-ship-highscore.js" type="text/javascript"></script>
+    <script src="P08-ship-highscore.js"        type="text/javascript"></script>
     <script src="P09-audio-oscillator.js"      type="text/javascript"></script>
     <script src="P10-game-network.js"          type="text/javascript"></script>
 

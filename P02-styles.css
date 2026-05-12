@@ -354,7 +354,7 @@ right buttons below combined.
 
 =================================================*/
 
-.ui button[name="shoot"] {
+.ui button[name="up"] {
   display: block;
   width: 100%;
 }

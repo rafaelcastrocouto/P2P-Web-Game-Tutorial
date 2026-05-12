@@ -48,8 +48,16 @@ Lastly we attach our network events.
     network.on('ready', network.ready);
     network.on('data', network.data);
     network.on('left', network.left);
+    
+/*================================================
 
-    setTimeout(network.ready, 2000);
+We start the game if there's no response from the 
+network in 3 seconds.
+
+=================================================*/
+
+    setTimeout(network.ready, 3000);
+    
   }, /* close network.start function */
 
 /*================================================
@@ -75,6 +83,7 @@ turn on the play button.
 =================================================*/
 
     ui.toggleButtons.play.disabled = false;
+    game.ready = true;
     
   }, /* close network.ready function */
   
